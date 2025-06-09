@@ -88,16 +88,14 @@
         .item-list li:not(.list-header-row):hover { background-color: rgba(79, 70, 229, 0.05); }
         [data-theme="dark"] .item-list li:not(.list-header-row):hover { background-color: rgba(129, 140, 248, 0.1); }
         
-        /* --- MODIFIED: Modal Dialog Logic --- */
+        /* Modal Dialog Logic */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--backdrop-color); backdrop-filter: blur(5px);
-            display: flex; 
-            justify-content: center; 
-            align-items: center; /* Center by default for desktop */
+            display: flex; justify-content: center; align-items: center;
             z-index: 1000; opacity: 0; visibility: hidden;
             transition: opacity var(--transition-speed), visibility var(--transition-speed);
-            padding: 1rem; /* Add padding for mobile */
+            padding: 1rem;
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content {
@@ -107,16 +105,15 @@
             width: 100%; max-width: 600px;
             transform: scale(0.95);
             transition: transform var(--transition-speed);
-            display: flex; /* ADDED */
-            flex-direction: column; /* ADDED */
-            max-height: 90vh; /* ADDED: Prevent modal from being taller than screen */
+            display: flex; flex-direction: column;
+            max-height: 90vh;
         }
         .modal-overlay.active .modal-content { transform: scale(1); }
         .modal-header { flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color); }
         .modal-header h2 { font-size: 1.25rem; font-weight: 600; }
         .modal-close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); transition: color var(--transition-speed); }
         .modal-close-btn:hover { color: var(--text-primary); }
-        .modal-body { flex-grow: 1; overflow-y: auto; padding: 1.5rem; } /* MODIFIED: This is now the scrollable part */
+        .modal-body { flex-grow: 1; overflow-y: auto; padding: 1.5rem; }
         .modal-footer { flex-shrink: 0; display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid var(--border-color); }
 
         /* Forms */
@@ -173,19 +170,13 @@
             .form-group.full-width { grid-column: span 1; }
             .panel-header, .panel-content { padding-left: 1rem; padding-right: 1rem; }
             
-            /* --- NEW: Mobile-First Modal Behavior --- */
             .modal-overlay {
-                align-items: flex-start; /* Position modal at the top */
-                padding-top: 5vh; /* Give it some breathing room from the top */
-                overflow-y: auto; /* Allow the overlay itself to scroll if needed on very small screens */
+                align-items: flex-start;
+                padding-top: 5vh;
+                overflow-y: auto;
             }
-            .modal-content {
-                width: 95%;
-                margin: 0 auto; /* Center horizontally */
-            }
-            .modal-header, .modal-body, .modal-footer {
-                padding: 1rem;
-            }
+            .modal-content { width: 95%; margin: 0 auto; }
+            .modal-header, .modal-body, .modal-footer { padding: 1rem; }
         }
 
         /* Responsive Item List for Mobile */
@@ -201,23 +192,52 @@
         
         /* Responsive Tables in Pending Panel for Mobile */
         @media (max-width: 640px) {
-            .table-wrapper table thead { display: none; }
-            .table-wrapper table, .table-wrapper table tbody, .table-wrapper table tr, .table-wrapper table td { display: block; width: 100%; }
-            .table-wrapper table tr { display: grid; gap: 0 1rem; margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); padding: 1rem; background-color: var(--input-bg); box-shadow: 0 2px 8px var(--shadow-color); }
-            #dataTable tbody tr { grid-template-columns: 1fr 1fr; grid-template-areas: "name name" "code code" "cost cairo" "sahel supplier" "status status" "delete delete"; }
-            #dataTableNewItem tbody tr { grid-template-columns: 1fr 1fr; grid-template-areas: "name name" "cost cairo" "sahel supplier" "delete delete"; }
-            .table-wrapper table td { padding: 0.5rem 0; border: none; white-space: normal; display: flex; flex-direction: column; }
-            .table-wrapper table td::before { content: attr(data-label); font-size: 0.8em; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.15rem; text-align: right; }
-            #dataTable td:nth-child(1) { grid-area: code; } #dataTable td:nth-child(2) { grid-area: name; } #dataTable td:nth-child(3) { grid-area: cost; } #dataTable td:nth-child(4) { grid-area: cairo; } #dataTable td:nth-child(5) { grid-area: sahel; } #dataTable td:nth-child(6) { grid-area: supplier; } #dataTable td:nth-child(7) { grid-area: status; } #dataTable td:nth-child(8) { grid-area: delete; }
-            #dataTableNewItem td:nth-child(1) { grid-area: name; } #dataTableNewItem td:nth-child(2) { grid-area: cost; } #dataTableNewItem td:nth-child(3) { grid-area: cairo; } #dataTableNewItem td:nth-child(4) { grid-area: sahel; } #dataTableNewItem td:nth-child(5) { grid-area: supplier; } #dataTableNewItem td:nth-child(6) { grid-area: delete; }
-            .table-wrapper td[data-label="الاسم"] { font-size: 1.2em; font-weight: 600; color: var(--primary-color); padding-bottom: 0; }
-            .table-wrapper td[data-label="الاسم"]::before { display: none; }
-            .table-wrapper td[data-label="الكود"] { color: var(--text-secondary); font-size: 0.9em; margin-top: -0.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); }
-            .table-wrapper td[data-label="الكود"]::before { display: none; }
-            .table-wrapper #dataTableNewItem td[data-label="الاسم"] { border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
-            .table-wrapper td:last-child { grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 0.75rem; margin-top: 0.5rem; align-items: center; }
-            .table-wrapper td:last-child::before { display: none; }
-            .delete-icon { font-size: 1.3rem; padding: 0.25rem 0.5rem; }
+            .table-wrapper:not(.force-desktop-view) table thead { display: none; }
+            .table-wrapper:not(.force-desktop-view) table, 
+            .table-wrapper:not(.force-desktop-view) table tbody, 
+            .table-wrapper:not(.force-desktop-view) table tr, 
+            .table-wrapper:not(.force-desktop-view) table td { display: block; width: 100%; }
+            .table-wrapper:not(.force-desktop-view) table tr { display: grid; gap: 0 1rem; margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); padding: 1rem; background-color: var(--input-bg); box-shadow: 0 2px 8px var(--shadow-color); }
+            #dataTable:not(.force-desktop-view) tbody tr { grid-template-columns: 1fr 1fr; grid-template-areas: "name name" "code code" "cost cairo" "sahel supplier" "status status" "delete delete"; }
+            #dataTableNewItem:not(.force-desktop-view) tbody tr { grid-template-columns: 1fr 1fr; grid-template-areas: "name name" "cost cairo" "sahel supplier" "delete delete"; }
+            .table-wrapper:not(.force-desktop-view) table td { padding: 0.5rem 0; border: none; white-space: normal; display: flex; flex-direction: column; }
+            .table-wrapper:not(.force-desktop-view) table td::before { content: attr(data-label); font-size: 0.8em; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.15rem; text-align: right; }
+            .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(1) { grid-area: code; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(2) { grid-area: name; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(3) { grid-area: cost; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(4) { grid-area: cairo; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(5) { grid-area: sahel; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(6) { grid-area: supplier; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(7) { grid-area: status; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(8) { grid-area: delete; }
+            .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(1) { grid-area: name; } .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(2) { grid-area: cost; } .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(3) { grid-area: cairo; } .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(4) { grid-area: sahel; } .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(5) { grid-area: supplier; } .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(6) { grid-area: delete; }
+            .table-wrapper:not(.force-desktop-view) td[data-label="الاسم"] { font-size: 1.2em; font-weight: 600; color: var(--primary-color); padding-bottom: 0; }
+            .table-wrapper:not(.force-desktop-view) td[data-label="الاسم"]::before { display: none; }
+            .table-wrapper:not(.force-desktop-view) td[data-label="الكود"] { color: var(--text-secondary); font-size: 0.9em; margin-top: -0.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); }
+            .table-wrapper:not(.force-desktop-view) td[data-label="الكود"]::before { display: none; }
+            .table-wrapper:not(.force-desktop-view) #dataTableNewItem td[data-label="الاسم"] { border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
+            .table-wrapper:not(.force-desktop-view) td:last-child { grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 0.75rem; margin-top: 0.5rem; align-items: center; }
+            .table-wrapper:not(.force-desktop-view) td:last-child::before { display: none; }
+            .table-wrapper:not(.force-desktop-view) .delete-icon { font-size: 1.3rem; padding: 0.25rem 0.5rem; }
+        }
+
+        /* NEW: Class to force desktop table view for image export */
+        .table-wrapper.force-desktop-view {
+            overflow: visible !important;
+        }
+        .table-wrapper.force-desktop-view table,
+        .table-wrapper.force-desktop-view table tbody,
+        .table-wrapper.force-desktop-view table tr,
+        .table-wrapper.force-desktop-view table td,
+        .table-wrapper.force-desktop-view table th {
+            display: revert !important; /* Reverts to browser default (table, tr, td etc) */
+            width: revert !important;
+            grid-area: auto !important;
+            padding: 0.85rem 1rem !important;
+            border: revert !important;
+            border-bottom: 1px solid var(--border-color) !important;
+            background: none !important;
+            box-shadow: none !important;
+            white-space: nowrap !important;
+        }
+        .table-wrapper.force-desktop-view table thead {
+            display: table-header-group !important;
+        }
+        .table-wrapper.force-desktop-view table td::before {
+            display: none !important;
         }
     </style>
 </head>
@@ -448,18 +468,38 @@
         }
         document.getElementById('showAddItemModalBtn').addEventListener('click', () => openModal(document.getElementById('addNewItemModal')));
         
-        const formatDecimal = num => parseFloat(num) ? parseFloat(num).toFixed(3) : "0.000";
+        // UPDATED: Handle blank/invalid inputs by returning an empty string
+        const formatDecimal = numStr => {
+            if (!numStr || isNaN(parseFloat(numStr))) {
+                return '';
+            }
+            return parseFloat(numStr).toFixed(3);
+        };
         const calculatePrice = (cost, margin) => (cost > 0 && margin >= 0 && margin < 100) ? cost / (1 - (margin / 100)) : 0;
         
+        // UPDATED: Handle blank cost input
         function updateCalculatedPrices() {
-            const cost = parseFloat(document.getElementById('costInput').value);
+            const costValue = document.getElementById('costInput').value;
+            if (!costValue.trim()) {
+                document.getElementById('cairoCostInput').value = '';
+                document.getElementById('sahelCostInput').value = '';
+                return;
+            }
+            const cost = parseFloat(costValue);
             const cairoPrice = calculatePrice(cost, parseFloat(document.getElementById('cairoMarginInput').value));
             const sahelPrice = calculatePrice(cost, parseFloat(document.getElementById('coastMarginInput').value));
             document.getElementById('cairoCostInput').value = cairoPrice > 0 ? cairoPrice.toFixed(3) : '';
             document.getElementById('sahelCostInput').value = sahelPrice > 0 ? sahelPrice.toFixed(3) : '';
         }
+        // UPDATED: Handle blank cost input
         function updateCalculatedNewItemPrices() {
-            const cost = parseFloat(document.getElementById('newItemCost').value);
+            const costValue = document.getElementById('newItemCost').value;
+             if (!costValue.trim()) {
+                document.getElementById('newItemCairoCost').value = '';
+                document.getElementById('newItemSahelCost').value = '';
+                return;
+            }
+            const cost = parseFloat(costValue);
             const cairoPrice = calculatePrice(cost, parseFloat(document.getElementById('newItemCairoMargin').value));
             const sahelPrice = calculatePrice(cost, parseFloat(document.getElementById('newItemCoastMargin').value));
             document.getElementById('newItemCairoCost').value = cairoPrice > 0 ? cairoPrice.toFixed(3) : '';
@@ -468,9 +508,10 @@
         ['costInput', 'cairoMarginInput', 'coastMarginInput'].forEach(id => document.getElementById(id).addEventListener('input', updateCalculatedPrices));
         ['newItemCost', 'newItemCairoMargin', 'newItemCoastMargin'].forEach(id => document.getElementById(id).addEventListener('input', updateCalculatedNewItemPrices));
         
+        // UPDATED: Removed strict cost validation
         document.getElementById('addButton').addEventListener('click', () => {
-            if (!selectedItem || !parseFloat(document.getElementById('costInput').value) > 0) {
-                alert('الرجاء إدخال تكلفة صحيحة.'); return;
+            if (!selectedItem) {
+                alert('الرجاء اختيار صنف أولاً.'); return;
             }
             const tableBody = document.getElementById('dataTableBody');
             const newRow = tableBody.insertRow();
@@ -488,10 +529,12 @@
             updateChangesCount();
             if (!document.getElementById('pendingChangesPanel').classList.contains('open')) togglePanel();
         });
+        
+        // UPDATED: Relaxed validation to only require a name
         document.getElementById('addNewItemButton').addEventListener('click', () => {
             const name = document.getElementById('newItemName').value;
-            if (!name.trim() || !parseFloat(document.getElementById('newItemCost').value) > 0) {
-                 alert('الرجاء إدخال اسم وتكلفة صحيحين.'); return;
+            if (!name.trim()) {
+                 alert('الرجاء إدخال اسم الصنف.'); return;
             }
             const tableBody = document.getElementById('dataTableBodyNewItem');
             const newRow = tableBody.insertRow();
@@ -545,11 +588,22 @@
             if (wb.SheetNames.length > 0) XLSX.writeFile(wb, "grocery_changes.xlsx");
             else alert("لا توجد تغييرات للتصدير.");
         });
+        
+        // UPDATED: Force desktop view for consistent image export
         document.getElementById('saveImageButton').addEventListener('click', () => {
-            html2canvas(document.querySelector('.panel-content'), { scale: 2, useCORS: true, backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f0f9ff' }).then(canvas => {
+            const panelContent = document.querySelector('.panel-content');
+            const tableWrappers = panelContent.querySelectorAll('.table-wrapper');
+
+            // Add class to force desktop view
+            tableWrappers.forEach(tw => tw.classList.add('force-desktop-view'));
+            
+            html2canvas(panelContent, { scale: 2, useCORS: true, backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f0f9ff' }).then(canvas => {
+                // IMPORTANT: Remove the class after the canvas is created
+                tableWrappers.forEach(tw => tw.classList.remove('force-desktop-view'));
+
                 const link = document.createElement('a');
-                link.download = 'pending_changes.jpg';
-                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                link.download = 'pending_changes.png';
+                link.href = canvas.toDataURL('image/png');
                 link.click();
             });
         });
