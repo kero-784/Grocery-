@@ -110,7 +110,7 @@
         table {
             border-collapse: collapse;
             width: 100%;
-            min-width: 800px; /* Force horizontal scroll on smaller screens */
+            min-width: 900px; /* Increased width to accommodate new column */
             font-size: 0.9em;
         }
         th, td {
@@ -281,9 +281,9 @@
         <div class="panel-header" onclick="togglePanel()"><h3><i class="fa-solid fa-list-check"></i> التغييرات المعلقة (<span id="changesCount">0</span>)</h3><i id="panelToggleIcon" class="fa-solid fa-chevron-up panel-toggle-icon"></i></div>
         <div class="panel-content">
             <div class="panel-actions"><button id="extractButton" class="btn btn-secondary"><i class="fas fa-file-excel"></i> Excel</button><button id="saveImageButton" class="btn btn-secondary"><i class="fas fa-file-image"></i> صورة</button><button id="clearTableButton" class="btn btn-danger"><i class="fas fa-trash-alt"></i> مسح الكل</button></div>
-            <div id="editChanges" class="table-wrapper"><h4>تعديلات الأسعار</h4><table id="dataTable"><thead><tr><th>الكود</th><th class="sticky-col-name">الاسم</th><th>التكلفة</th><th>القاهرة</th><th>الساحل</th><th>المورد</th><th>الحالة الجديدة</th><th class="sticky-col-action">حذف</th></tr></thead><tbody id="dataTableBody"></tbody></table></div>
+            <div id="editChanges" class="table-wrapper"><h4>تعديلات الأسعار</h4><table id="dataTable"><thead><tr><th>الكود</th><th class="sticky-col-name">الاسم</th><th>التكلفة</th><th>القاهرة</th><th>الساحل</th><th>المورد</th><th>الحالة الجديدة</th><th>الصلاحية</th><th class="sticky-col-action">حذف</th></tr></thead><tbody id="dataTableBody"></tbody></table></div>
             <hr style="border:none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
-            <div id="newChanges" class="table-wrapper"><h4>أصناف جديدة</h4><table id="dataTableNewItem"><thead><tr><th class="sticky-col-name">الاسم</th><th>التكلفة</th><th>القاهرة</th><th>الساحل</th><th>المورد</th><th class="sticky-col-action">حذف</th></tr></thead><tbody id="dataTableBodyNewItem"></tbody></table></div>
+            <div id="newChanges" class="table-wrapper"><h4>أصناف جديدة</h4><table id="dataTableNewItem"><thead><tr><th class="sticky-col-name">الاسم</th><th>التكلفة</th><th>القاهرة</th><th>الساحل</th><th>المورد</th><th>الصلاحية</th><th class="sticky-col-action">حذف</th></tr></thead><tbody id="dataTableBodyNewItem"></tbody></table></div>
         </div>
     </div>
     
@@ -413,7 +413,10 @@
 
             const cost = parseFloat(costInput.value);
             if (isNaN(cost) || cost <= 0) {
-                cairoCostOutput.value = ''; sahelCostOutput.value = '';
+                if (costInput.value.trim() === '') {
+                    cairoCostOutput.value = '';
+                    sahelCostOutput.value = '';
+                }
                 return;
             }
 
@@ -438,6 +441,7 @@
                 <td>${formatDecimal(document.getElementById('sahelCostInput').value)}</td>
                 <td>${document.getElementById('supplierInput').value}</td>
                 <td>${document.getElementById('newStatusInput').value || 'بدون تغيير'}</td>
+                <td>${document.getElementById('expiryInput').value || ''}</td>
                 <td class="sticky-col-action"><i class="fas fa-trash-alt delete-icon"></i></td>`;
             newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
             closeModal(document.getElementById('editItemModal'));
@@ -456,6 +460,7 @@
                 <td>${formatDecimal(document.getElementById('newItemCairoCost').value)}</td>
                 <td>${formatDecimal(document.getElementById('newItemSahelCost').value)}</td>
                 <td>${document.getElementById('newItemSupplier').value}</td>
+                <td>${document.getElementById('newItemExpiry').value || ''}</td>
                 <td class="sticky-col-action"><i class="fas fa-trash-alt delete-icon"></i></td>`;
             newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
             closeModal(document.getElementById('addNewItemModal'));
