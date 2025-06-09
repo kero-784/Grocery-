@@ -202,11 +202,25 @@
         
         /* Table */
         .table-wrapper { overflow-x: auto; }
-        table { border-collapse: collapse; width: 100%; font-size: 0.9em; }
-        th, td { border-bottom: 1px solid var(--border-color); padding: 0.85rem 1rem; text-align: right; white-space: nowrap; }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.95em; /* UPDATED: Increased font size for better readability */
+        }
+        th, td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.85rem 1rem;
+            text-align: right;
+            white-space: nowrap;
+        }
         th { font-weight: 600; }
         tbody tr:last-child td { border-bottom: none; }
-        .delete-icon { color: var(--danger-color); cursor: pointer; font-size: 1.1rem; transition: opacity var(--transition-speed); }
+        .delete-icon {
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: opacity var(--transition-speed);
+        }
         .delete-icon:hover { opacity: 0.7; }
         
         /* Theme Toggle */
@@ -264,6 +278,7 @@
             .table-wrapper table td {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
                 text-align: left;
                 padding: 0.5rem 0;
                 border: none;
@@ -281,7 +296,6 @@
                 margin-top: 0.5rem;
             }
         }
-
     </style>
 </head>
 <body>
@@ -349,8 +363,8 @@
                 <div class="form-grid">
                     <div class="form-group"><label for="costInput">التكلفة</label><input type="number" id="costInput" step="0.001" placeholder="أدخل التكلفة"></div>
                     <div class="form-group"><label for="supplierInput">المورد</label><input type="text" id="supplierInput" placeholder="اسم المورد"></div>
-                    <div class="form-group"><label for="cairoMarginInput">نسبة القاهرة (%)</label><input type="number" id="cairoMarginInput" step="0.001" placeholder="0.000"></div>
-                    <div class="form-group"><label for="coastMarginInput">نسبة الساحل (%)</label><input type="number" id="coastMarginInput" step="0.001" placeholder="0.000"></div>
+                    <div class="form-group"><label for="cairoMarginInput">نسبة القاهرة (%)</label><input type="number" id="cairoMarginInput" step="0.001" placeholder="أدخل النسبة"></div>
+                    <div class="form-group"><label for="coastMarginInput">نسبة الساحل (%)</label><input type="number" id="coastMarginInput" step="0.001" placeholder="أدخل النسبة"></div>
                     <div class="form-group"><label for="cairoCostInput">سعر القاهرة</label><input type="number" id="cairoCostInput" step="0.001" placeholder="يُحسب تلقائياً"></div>
                     <div class="form-group"><label for="sahelCostInput">سعر الساحل</label><input type="number" id="sahelCostInput" step="0.001" placeholder="يُحسب تلقائياً"></div>
                     <div class="form-group"><label for="newStatusInput">الحالة الجديدة</label><select id="newStatusInput"><option value="" selected>بدون تغيير</option><option value="جاري">جاري</option><option value="موقوف">موقوف</option></select></div>
@@ -370,8 +384,8 @@
                     <div class="form-group full-width"><label for="newItemName">اسم الصنف</label><input type="text" id="newItemName" placeholder="مثال: جبنة فيتا"></div>
                     <div class="form-group"><label for="newItemCost">التكلفة</label><input type="number" id="newItemCost" step="0.001" placeholder="أدخل التكلفة"></div>
                     <div class="form-group"><label for="newItemSupplier">المورد</label><input type="text" id="newItemSupplier" placeholder="اسم المورد"></div>
-                    <div class="form-group"><label for="newItemCairoMargin">نسبة القاهرة (%)</label><input type="number" id="newItemCairoMargin" step="0.001" placeholder="0.000"></div>
-                    <div class="form-group"><label for="newItemCoastMargin">نسبة الساحل (%)</label><input type="number" id="newItemCoastMargin" step="0.001" placeholder="0.000"></div>
+                    <div class="form-group"><label for="newItemCairoMargin">نسبة القاهرة (%)</label><input type="number" id="newItemCairoMargin" step="0.001" placeholder="أدخل النسبة"></div>
+                    <div class="form-group"><label for="newItemCoastMargin">نسبة الساحل (%)</label><input type="number" id="newItemCoastMargin" step="0.001" placeholder="أدخل النسبة"></div>
                     <div class="form-group"><label for="newItemCairoCost">سعر القاهرة</label><input type="number" id="newItemCairoCost" step="0.001" placeholder="يُحسب تلقائياً"></div>
                     <div class="form-group"><label for="newItemSahelCost">سعر الساحل</label><input type="number" id="newItemSahelCost" step="0.001" placeholder="يُحسب تلقائياً"></div>
                     <div class="form-group full-width"><label for="newItemExpiry">صلاحية (يوم)</label><input type="number" id="newItemExpiry" placeholder="e.g., 90"></div>
@@ -502,9 +516,12 @@
             document.getElementById('nameDisplay').textContent = item.name;
             document.getElementById('codeDisplay').textContent = item.code;
             document.getElementById('statusDisplay').textContent = item.status;
-            document.getElementById('cairoMarginInput').value = item.cairoMargin?.toFixed(3) || '';
-            document.getElementById('coastMarginInput').value = item.coastMargin?.toFixed(3) || '';
-            resetEditModalInputs(); // Reset cost and calculated fields
+            
+            // Set margin fields, ensuring they are empty if the value is 0
+            document.getElementById('cairoMarginInput').value = item.cairoMargin > 0 ? item.cairoMargin.toFixed(3) : '';
+            document.getElementById('coastMarginInput').value = item.coastMargin > 0 ? item.coastMargin.toFixed(3) : '';
+            
+            resetEditModalInputs();
             openModal(document.getElementById('editItemModal'));
         }
         document.getElementById('showAddItemModalBtn').addEventListener('click', () => openModal(document.getElementById('addNewItemModal')));
