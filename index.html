@@ -61,7 +61,6 @@
             background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
             color: var(--text-primary);
             min-height: 100vh;
-            /* FIXED: Reduced excessive padding, as sticky positioning handles overlap better */
             padding-bottom: 80px;
         }
         
@@ -71,96 +70,35 @@
             justify-content: space-between;
             align-items: center;
         }
-        .app-header h1 {
-            font-size: 1.75rem;
-            font-weight: 600;
-        }
+        .app-header h1 { font-size: 1.75rem; font-weight: 600; }
         .header-actions { display: flex; align-items: center; gap: 1rem; }
         
-        .homepage-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            padding: 4rem 2rem;
-            flex-wrap: wrap;
-        }
-        .homepage-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
-            padding: 2.5rem;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px var(--shadow-color);
-            backdrop-filter: blur(10px);
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-            flex-basis: 320px;
-        }
-        .homepage-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 25px var(--shadow-color);
-        }
+        .homepage-container { display: flex; justify-content: center; align-items: center; gap: 2rem; padding: 4rem 2rem; flex-wrap: wrap; }
+        .homepage-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); padding: 2.5rem; text-align: center; cursor: pointer; box-shadow: 0 4px 15px var(--shadow-color); backdrop-filter: blur(10px); transition: transform var(--transition-speed), box-shadow var(--transition-speed); flex-basis: 320px; }
+        .homepage-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px var(--shadow-color); }
         .homepage-card i { font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem; }
         .homepage-card span { font-size: 1.25rem; font-weight: 500; display: block; }
 
-        .workspace-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        .list-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px var(--shadow-color);
-            backdrop-filter: blur(10px);
-        }
-        .list-header-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
+        .workspace-container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        .workspace-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .list-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); padding: 1.5rem; box-shadow: 0 4px 15px var(--shadow-color); backdrop-filter: blur(10px); }
+        .list-header-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
         #searchInput { width: 100%; max-width: 400px; }
         
         /* --- Item List --- */
-        .item-list-wrapper { max-height: 50vh; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); }
+        /* FIXED: Added overscroll-behavior to prevent background scroll */
+        .item-list-wrapper { max-height: 50vh; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); overscroll-behavior: contain; }
         .item-list { list-style-type: none; }
-        .item-list li {
-            display: grid;
-            grid-template-columns: 1fr 1fr 2fr 1fr;
-            gap: 1rem;
-            padding: 0.85rem 1rem;
-            border-bottom: 1px solid var(--border-color);
-            transition: background-color var(--transition-speed);
-            cursor: pointer;
-        }
+        .item-list li { display: grid; grid-template-columns: 1fr 1fr 2fr 1fr; gap: 1rem; padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); transition: background-color var(--transition-speed); cursor: pointer; }
         .item-list li:last-child { border-bottom: none; }
         .item-list li.list-header-row { font-weight: 600; background-color: var(--input-bg); position: sticky; top: 0; z-index: 10; cursor: default; }
         .item-list li:not(.list-header-row):hover { background-color: rgba(79, 70, 229, 0.05); }
         [data-theme="dark"] .item-list li:not(.list-header-row):hover { background-color: rgba(129, 140, 248, 0.1); }
         
         /* Modal Dialog */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--backdrop-color); backdrop-filter: blur(5px);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 1000; opacity: 0; visibility: hidden;
-            transition: opacity var(--transition-speed), visibility var(--transition-speed);
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--backdrop-color); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity var(--transition-speed), visibility var(--transition-speed); }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            padding: 2rem; border-radius: var(--border-radius-lg);
-            box-shadow: 0 10px 30px var(--shadow-color);
-            width: 90%; max-width: 600px;
-            transform: scale(0.95);
-            transition: transform var(--transition-speed);
-        }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--border-radius-lg); box-shadow: 0 10px 30px var(--shadow-color); width: 90%; max-width: 600px; transform: scale(0.95); transition: transform var(--transition-speed); }
         .modal-overlay.active .modal-content { transform: scale(1); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
         .modal-header h2 { font-size: 1.25rem; font-weight: 600; }
@@ -173,19 +111,9 @@
         .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
         .form-group.full-width { grid-column: span 2; }
         .form-group label { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); }
-        input, select {
-            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-md); background-color: var(--input-bg);
-            color: var(--text-primary); font-size: 1rem; font-family: var(--font-family);
-            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
-        }
+        input, select { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); background-color: var(--input-bg); color: var(--text-primary); font-size: 1rem; font-family: var(--font-family); transition: border-color var(--transition-speed), box-shadow var(--transition-speed); }
         input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
-        /* FIXED: Style for readonly inputs to look disabled but still be readable */
-        input:read-only {
-            background-color: var(--border-color);
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
+        input:read-only { background-color: var(--border-color); cursor: not-allowed; opacity: 0.7; }
         .uneditable-display { background-color: var(--input-bg); padding: 0.75rem; border-radius: var(--border-radius-md); border: 1px solid var(--border-color); }
         
         /* Buttons */
@@ -198,42 +126,24 @@
         .btn-danger { background-color: var(--danger-color); color: #fff; }
 
         /* Pending Changes Panel */
-        /* FIXED: Changed position to sticky for better mobile/keyboard behavior */
-        .pending-changes-panel {
-            position: sticky;
-            bottom: 0;
-            left: 0; width: 100%; z-index: 500; background: var(--card-bg); border-top: 1px solid var(--border-color); box-shadow: 0 -5px 20px var(--shadow-color); border-top-left-radius: var(--border-radius-lg); border-top-right-radius: var(--border-radius-lg); backdrop-filter: blur(10px); transition: transform var(--transition-speed);
-            transform: translateY(calc(100% - 60px));
-        }
+        .pending-changes-panel { position: sticky; bottom: 0; left: 0; width: 100%; z-index: 500; background: var(--card-bg); border-top: 1px solid var(--border-color); box-shadow: 0 -5px 20px var(--shadow-color); border-top-left-radius: var(--border-radius-lg); border-top-right-radius: var(--border-radius-lg); backdrop-filter: blur(10px); transition: transform var(--transition-speed); transform: translateY(calc(100% - 60px)); }
         .pending-changes-panel.open { transform: translateY(0); }
         .panel-header { padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .panel-header h3 { font-size: 1.1rem; font-weight: 600; }
         .panel-toggle-icon { transition: transform var(--transition-speed); }
         .pending-changes-panel.open .panel-toggle-icon { transform: rotate(180deg); }
-        .panel-content { padding: 0 2rem 1.5rem 2rem; max-height: 40vh; overflow-y: auto; }
-        .panel-actions { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        /* FIXED: Added overscroll-behavior to prevent background scroll */
+        .panel-content { padding: 0 2rem 1.5rem 2rem; max-height: 40vh; overflow-y: auto; overscroll-behavior: contain; }
+        .panel-actions { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+        .panel-actions .action-group { display: flex; gap: 1rem; flex-wrap: wrap; }
         
         /* Table */
         .table-wrapper { overflow-x: auto; }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 0.95em;
-        }
-        th, td {
-            border-bottom: 1px solid var(--border-color);
-            padding: 0.85rem 1rem;
-            text-align: right;
-            white-space: nowrap;
-        }
+        table { border-collapse: collapse; width: 100%; font-size: 0.95em; }
+        th, td { border-bottom: 1px solid var(--border-color); padding: 0.85rem 1rem; text-align: right; white-space: nowrap; }
         th { font-weight: 600; }
         tbody tr:last-child td { border-bottom: none; }
-        .delete-icon {
-            color: var(--danger-color);
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: opacity var(--transition-speed);
-        }
+        .delete-icon { color: var(--danger-color); cursor: pointer; font-size: 1.1rem; transition: opacity var(--transition-speed); }
         .delete-icon:hover { opacity: 0.7; }
         
         /* Theme Toggle */
@@ -255,60 +165,37 @@
             .form-group.full-width { grid-column: span 1; }
             .modal-content { width: 95%; padding: 1.5rem; }
             .panel-header, .panel-content { padding-left: 1rem; padding-right: 1rem; }
+            .panel-actions { flex-direction: column; align-items: stretch; }
+            .panel-actions .action-group { justify-content: center; }
         }
 
         /* Responsive Item List for Mobile */
         @media (max-width: 640px) {
-            .item-list li:not(.list-header-row) {
-                grid-template-areas: "name name" "code plu" "status status";
-                grid-template-columns: 1fr 1fr;
-                padding: 1rem;
-                gap: 0.25rem 1rem;
-            }
+            .item-list li:not(.list-header-row) { grid-template-areas: "name name" "code plu" "status status"; grid-template-columns: 1fr 1fr; padding: 1rem; gap: 0.25rem 1rem; }
             .item-list li span:nth-child(1) { grid-area: code; font-size: 0.8em; color: var(--text-secondary); }
             .item-list li span:nth-child(2) { grid-area: plu; font-size: 0.8em; color: var(--text-secondary); }
             .item-list li span:nth-child(3) { grid-area: name; font-size: 1.1em; font-weight: 500; margin-bottom: 0.5rem; }
             .item-list li span:nth-child(4) { grid-area: status; font-size: 0.8em; justify-self: start; background: var(--input-bg); padding: 0.2rem 0.5rem; border-radius: 6px; margin-top: 0.5rem; }
             .item-list-wrapper { max-height: 60vh; }
-            .list-header-row { display: none; } /* Hide header on mobile */
+            .list-header-row { display: none; } /* Keep hiding header, as we added a title */
         }
         
         /* Responsive Tables in Panel for Mobile */
         @media (max-width: 640px) {
-            .table-wrapper table thead {
-                display: none;
-            }
-            .table-wrapper table, .table-wrapper table tbody, .table-wrapper table tr, .table-wrapper table td {
-                display: block;
-                width: 100%;
-            }
-            .table-wrapper table tr {
-                margin-bottom: 1rem;
-                border: 1px solid var(--border-color);
-                border-radius: var(--border-radius-md);
-                padding: 1rem;
-            }
-            .table-wrapper table td {
-                /* FIXED: Changed alignment for better readability on mobile */
-                display: flex;
-                justify-content: flex-start; /* Aligns items to the right in RTL */
-                align-items: center;
-                gap: 0.75rem; /* Adds space between label and value */
-                text-align: right; /* Ensures text inside aligns right */
-                padding: 0.5rem 0;
-                border: none;
-                white-space: normal;
-            }
+            .table-wrapper table thead { display: none; }
+            .table-wrapper table, .table-wrapper table tbody, .table-wrapper table tr, .table-wrapper table td { display: block; width: 100%; }
+            .table-wrapper table tr { margin-bottom: 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 1rem; }
+            .table-wrapper table td { display: flex; justify-content: flex-start; align-items: center; text-align: right; padding: 0.5rem 0; border: none; white-space: normal; gap: 0.5rem; }
+            /* FIXED: Improved mobile table layout for better alignment and readability */
             .table-wrapper table td::before {
-                content: attr(data-label);
+                content: attr(data-label) ":"; /* Add colon for clarity */
                 font-weight: 500;
                 color: var(--text-secondary);
-                flex-shrink: 0; /* Prevents the label from shrinking */
+                flex-basis: 80px; /* Give labels a consistent width */
+                text-align: left; /* Align label text to the left within its box */
+                margin-left: 0.5rem;
             }
-            .table-wrapper table td:last-child {
-                justify-content: center;
-                margin-top: 0.5rem;
-            }
+            .table-wrapper table td:last-child { justify-content: center; margin-top: 0.5rem; }
         }
     </style>
 </head>
@@ -320,10 +207,7 @@
             <button class="btn btn-secondary" onclick="showHomepage()"><i class="fa-solid fa-house"></i> الرئيسية</button>
             <div class="theme-switch-wrapper">
                 <i class="fas fa-sun"></i>
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
-                    <div class="slider round"></div>
-                </label>
+                <label class="theme-switch" for="checkbox"><input type="checkbox" id="checkbox" /><div class="slider round"></div></label>
                 <i class="fas fa-moon"></i>
             </div>
         </div>
@@ -332,18 +216,14 @@
     <main id="app-main">
         <!-- Homepage View -->
         <div id="homepage" class="homepage-container">
-            <div class="homepage-card" onclick="showWorkspace('edit')">
-                <i class="fas fa-tags"></i>
-                <span>تعديل أسعار الأصناف</span>
-            </div>
-            <div class="homepage-card" onclick="showWorkspace('add')">
-                <i class="fas fa-plus-circle"></i>
-                <span>إضافة صنف جديد</span>
-            </div>
+            <div class="homepage-card" onclick="showWorkspace('edit')"><i class="fas fa-tags"></i><span>تعديل أسعار الأصناف</span></div>
+            <div class="homepage-card" onclick="showWorkspace('add')"><i class="fas fa-plus-circle"></i><span>إضافة صنف جديد</span></div>
         </div>
 
         <!-- Workspace View -->
         <div id="workspace" class="workspace-container" style="display: none;">
+            <!-- FIXED: Added a proper title for the list section -->
+            <h2 class="workspace-title"><i class="fa-solid fa-list-ul"></i> قائمة الأصناف</h2>
             <div class="list-container">
                 <div class="list-header-controls">
                     <input type="text" id="searchInput" class="btn" placeholder="بحث بالاسم أو الكود...">
@@ -379,7 +259,6 @@
                     <div class="form-group"><label for="supplierInput">المورد</label><input type="text" id="supplierInput" placeholder="اسم المورد"></div>
                     <div class="form-group"><label for="cairoMarginInput">نسبة القاهرة (%)</label><input type="number" id="cairoMarginInput" step="0.001" placeholder="أدخل النسبة"></div>
                     <div class="form-group"><label for="coastMarginInput">نسبة الساحل (%)</label><input type="number" id="coastMarginInput" step="0.001" placeholder="أدخل النسبة"></div>
-                    <!-- FIXED: Added readonly to prevent user input -->
                     <div class="form-group"><label for="cairoCostInput">سعر القاهرة</label><input type="number" id="cairoCostInput" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
                     <div class="form-group"><label for="sahelCostInput">سعر الساحل</label><input type="number" id="sahelCostInput" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
                     <div class="form-group"><label for="newStatusInput">الحالة الجديدة</label><select id="newStatusInput"><option value="" selected>بدون تغيير</option><option value="جاري">جاري</option><option value="موقوف">موقوف</option></select></div>
@@ -401,7 +280,6 @@
                     <div class="form-group"><label for="newItemSupplier">المورد</label><input type="text" id="newItemSupplier" placeholder="اسم المورد"></div>
                     <div class="form-group"><label for="newItemCairoMargin">نسبة القاهرة (%)</label><input type="number" id="newItemCairoMargin" step="0.001" placeholder="أدخل النسبة"></div>
                     <div class="form-group"><label for="newItemCoastMargin">نسبة الساحل (%)</label><input type="number" id="newItemCoastMargin" step="0.001" placeholder="أدخل النسبة"></div>
-                    <!-- FIXED: Added readonly to prevent user input -->
                     <div class="form-group"><label for="newItemCairoCost">سعر القاهرة</label><input type="number" id="newItemCairoCost" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
                     <div class="form-group"><label for="newItemSahelCost">سعر الساحل</label><input type="number" id="newItemSahelCost" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
                     <div class="form-group full-width"><label for="newItemExpiry">صلاحية (يوم)</label><input type="number" id="newItemExpiry" placeholder="e.g., 90"></div>
@@ -415,7 +293,15 @@
     <div id="pendingChangesPanel" class="pending-changes-panel">
         <div class="panel-header" onclick="togglePanel()"><h3><i class="fa-solid fa-list-check"></i> التغييرات المعلقة (<span id="changesCount">0</span>)</h3><i id="panelToggleIcon" class="fa-solid fa-chevron-up panel-toggle-icon"></i></div>
         <div class="panel-content">
-            <div class="panel-actions"><button id="extractButton" class="btn btn-secondary"><i class="fas fa-file-excel"></i> Excel</button><button id="saveImageButton" class="btn btn-secondary"><i class="fas fa-file-image"></i> صورة</button><button id="clearTableButton" class="btn btn-danger"><i class="fas fa-trash-alt"></i> مسح الكل</button></div>
+            <div class="panel-actions">
+                <div class="action-group">
+                    <button id="extractButton" class="btn btn-secondary"><i class="fas fa-file-excel"></i> Excel</button>
+                    <button id="saveImageButton" class="btn btn-secondary"><i class="fas fa-file-image"></i> صورة</button>
+                    <button id="clearTableButton" class="btn btn-danger"><i class="fas fa-trash-alt"></i> مسح الكل</button>
+                </div>
+                <!-- FIXED: Added a close button for better UX -->
+                <button id="closePanelButton" class="btn btn-primary"><i class="fas fa-check"></i> إغلاق</button>
+            </div>
             <div id="editChanges" class="table-wrapper"><h4>تعديلات الأسعار</h4><table id="dataTable"><thead><tr><th>الكود</th><th>الاسم</th><th>التكلفة</th><th>القاهرة</th><th>الساحل</th><th>المورد</th><th>الحالة الجديدة</th><th>حذف</th></tr></thead><tbody id="dataTableBody"></tbody></table></div>
             <hr style="border:none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
             <div id="newChanges" class="table-wrapper"><h4>أصناف جديدة</h4><table id="dataTableNewItem"><thead><tr><th>الاسم</th><th>التكلفة</th><th>القاهرة</th><th>الساحل</th><th>المورد</th><th>حذف</th></tr></thead><tbody id="dataTableBodyNewItem"></tbody></table></div>
@@ -429,6 +315,12 @@
             initTheme();
             initModalClosers();
             fetchDataFromGoogleSheet();
+            // FIXED: Add event listener for the new close button
+            document.getElementById('closePanelButton').addEventListener('click', () => {
+                if (document.getElementById('pendingChangesPanel').classList.contains('open')) {
+                    togglePanel();
+                }
+            });
         });
 
         let database = [];
@@ -451,10 +343,14 @@
             document.getElementById('homepage').style.display = 'flex';
             document.getElementById('workspace').style.display = 'none';
         }
+
         function showWorkspace(mode) {
             document.getElementById('homepage').style.display = 'none';
-            document.getElementById('workspace').style.display = 'flex';
-            if (mode === 'add') openModal(document.getElementById('addNewItemModal'));
+            document.getElementById('workspace').style.display = 'block'; // Changed to block for title to work correctly
+            if (mode === 'add') {
+                resetAddModal(); // Ensure add modal is fresh when opened this way
+                openModal(document.getElementById('addNewItemModal'));
+            }
         }
         
         function initModalClosers() {
@@ -502,11 +398,12 @@
             const itemList = document.getElementById('itemList');
             const headerRow = itemList.querySelector('.list-header-row');
             itemList.innerHTML = '';
-            itemList.appendChild(headerRow);
+            if (headerRow) itemList.appendChild(headerRow);
             if (!listData.length) {
                 const li = document.createElement('li');
                 li.innerHTML = `<span>لا توجد نتائج</span>`;
                 li.style.gridColumn = 'span 4';
+                li.style.textAlign = 'center';
                 itemList.appendChild(li);
                 return;
             }
@@ -533,19 +430,18 @@
             document.getElementById('codeDisplay').textContent = item.code;
             document.getElementById('statusDisplay').textContent = item.status;
             
-            // First, clear any old data from a previous selection
             resetEditModalInputs();
 
-            // Then, populate with the new item's data
             document.getElementById('cairoMarginInput').value = item.cairoMargin > 0 ? item.cairoMargin.toFixed(3) : '';
             document.getElementById('coastMarginInput').value = item.coastMargin > 0 ? item.coastMargin.toFixed(3) : '';
             
-            // FIXED: Removed the call to resetEditModalInputs() from here. 
-            // It now runs first to clear old data before new data is set.
-            
             openModal(document.getElementById('editItemModal'));
         }
-        document.getElementById('showAddItemModalBtn').addEventListener('click', () => openModal(document.getElementById('addNewItemModal')));
+        
+        document.getElementById('showAddItemModalBtn').addEventListener('click', () => {
+             resetAddModal(); // Always reset the add modal before showing
+             openModal(document.getElementById('addNewItemModal'));
+        });
         
         const formatDecimal = num => parseFloat(num) ? parseFloat(num).toFixed(3) : "0.000";
         const calculatePrice = (cost, margin) => (cost > 0 && margin >= 0 && margin < 100) ? cost / (1 - (margin / 100)) : 0;
@@ -568,39 +464,26 @@
         ['newItemCost', 'newItemCairoMargin', 'newItemCoastMargin'].forEach(id => document.getElementById(id).addEventListener('input', updateCalculatedNewItemPrices));
         
         document.getElementById('addButton').addEventListener('click', () => {
-            if (!selectedItem || !parseFloat(document.getElementById('costInput').value) > 0) {
+            if (!selectedItem || !(parseFloat(document.getElementById('costInput').value) > 0)) {
                 alert('الرجاء إدخال تكلفة صحيحة.'); return;
             }
             const tableBody = document.getElementById('dataTableBody');
             const newRow = tableBody.insertRow();
-            newRow.innerHTML = `
-                <td data-label="الكود">${selectedItem.code}</td>
-                <td data-label="الاسم">${selectedItem.name}</td>
-                <td data-label="التكلفة">${formatDecimal(document.getElementById('costInput').value)}</td>
-                <td data-label="القاهرة">${formatDecimal(document.getElementById('cairoCostInput').value)}</td>
-                <td data-label="الساحل">${formatDecimal(document.getElementById('sahelCostInput').value)}</td>
-                <td data-label="المورد">${document.getElementById('supplierInput').value}</td>
-                <td data-label="الحالة الجديدة">${document.getElementById('newStatusInput').value || 'بدون تغيير'}</td>
-                <td data-label="حذف"><i class="fas fa-trash-alt delete-icon"></i></td>`;
+            newRow.innerHTML = `<td data-label="الكود">${selectedItem.code}</td><td data-label="الاسم">${selectedItem.name}</td><td data-label="التكلفة">${formatDecimal(document.getElementById('costInput').value)}</td><td data-label="القاهرة">${formatDecimal(document.getElementById('cairoCostInput').value)}</td><td data-label="الساحل">${formatDecimal(document.getElementById('sahelCostInput').value)}</td><td data-label="المورد">${document.getElementById('supplierInput').value || 'N/A'}</td><td data-label="الحالة الجديدة">${document.getElementById('newStatusInput').value || 'بدون تغيير'}</td><td data-label="حذف"><i class="fas fa-trash-alt delete-icon"></i></td>`;
             newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
             closeModal(document.getElementById('editItemModal'));
             updateChangesCount();
             if (!document.getElementById('pendingChangesPanel').classList.contains('open')) togglePanel();
         });
+
         document.getElementById('addNewItemButton').addEventListener('click', () => {
             const name = document.getElementById('newItemName').value;
-            if (!name.trim() || !parseFloat(document.getElementById('newItemCost').value) > 0) {
+            if (!name.trim() || !(parseFloat(document.getElementById('newItemCost').value) > 0)) {
                  alert('الرجاء إدخال اسم وتكلفة صحيحين.'); return;
             }
             const tableBody = document.getElementById('dataTableBodyNewItem');
             const newRow = tableBody.insertRow();
-            newRow.innerHTML = `
-                <td data-label="الاسم">${name}</td>
-                <td data-label="التكلفة">${formatDecimal(document.getElementById('newItemCost').value)}</td>
-                <td data-label="القاهرة">${formatDecimal(document.getElementById('newItemCairoCost').value)}</td>
-                <td data-label="الساحل">${formatDecimal(document.getElementById('newItemSahelCost').value)}</td>
-                <td data-label="المورد">${document.getElementById('newItemSupplier').value}</td>
-                <td data-label="حذف"><i class="fas fa-trash-alt delete-icon"></i></td>`;
+            newRow.innerHTML = `<td data-label="الاسم">${name}</td><td data-label="التكلفة">${formatDecimal(document.getElementById('newItemCost').value)}</td><td data-label="القاهرة">${formatDecimal(document.getElementById('newItemCairoCost').value)}</td><td data-label="الساحل">${formatDecimal(document.getElementById('newItemSahelCost').value)}</td><td data-label="المورد">${document.getElementById('newItemSupplier').value || 'N/A'}</td><td data-label="حذف"><i class="fas fa-trash-alt delete-icon"></i></td>`;
             newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
             closeModal(document.getElementById('addNewItemModal'));
             resetAddModal();
@@ -609,15 +492,7 @@
         });
 
         function resetEditModalInputs() {
-            // This function now correctly resets all editable fields in the edit modal.
-            document.getElementById('costInput').value = '';
-            document.getElementById('supplierInput').value = '';
-            document.getElementById('cairoMarginInput').value = '';
-            document.getElementById('coastMarginInput').value = '';
-            document.getElementById('cairoCostInput').value = '';
-            document.getElementById('sahelCostInput').value = '';
-            document.getElementById('newStatusInput').value = '';
-            document.getElementById('expiryInput').value = '';
+            document.getElementById('editItemModal').querySelectorAll('input, select').forEach(el => { if(el.id) el.value = ''; });
         }
         function resetAddModal() {
             document.getElementById('addNewItemModal').querySelectorAll('input, select').forEach(el => el.value = '');
@@ -651,23 +526,11 @@
         });
         document.getElementById('saveImageButton').addEventListener('click', () => {
             const panelContent = document.querySelector('.panel-content');
-            const isPanelOpen = document.getElementById('pendingChangesPanel').classList.contains('open');
-
-            // Temporarily ensure the panel is fully visible for the screenshot
-            if (!isPanelOpen) {
-                panelContent.style.maxHeight = 'none';
-            }
-
             html2canvas(panelContent, { scale: 2, useCORS: true, backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f0f9ff' }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'pending_changes.jpg';
                 link.href = canvas.toDataURL('image/jpeg', 0.95);
                 link.click();
-
-                // Restore original style
-                if(!isPanelOpen) {
-                    panelContent.style.maxHeight = '';
-                }
             });
         });
     </script>
