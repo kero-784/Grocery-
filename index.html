@@ -260,7 +260,7 @@
             .list-header-row { display: none; } /* Hide header on mobile */
         }
         
-        /* --- UPDATED: Responsive Tables in Panel for Mobile --- */
+        /* --- RECONSTRUCTED: Responsive Tables in Panel for Mobile --- */
         @media (max-width: 640px) {
             .table-wrapper table thead {
                 display: none;
@@ -268,16 +268,16 @@
 
             .table-wrapper table, 
             .table-wrapper table tbody, 
+            .table-wrapper table tr,
             .table-wrapper table td {
                 display: block;
                 width: 100%;
             }
 
-            /* Turn each row into a self-contained card */
+            /* --- Card Layout --- */
             .table-wrapper table tr {
-                display: flex;
-                flex-direction: column;
-                gap: 0.25rem; /* Space between each data row */
+                display: grid; /* USE GRID! */
+                gap: 0 1rem; /* Column gap */
                 margin-bottom: 1.5rem;
                 border: 1px solid var(--border-color);
                 border-radius: var(--border-radius-lg);
@@ -286,43 +286,117 @@
                 box-shadow: 0 2px 8px var(--shadow-color);
             }
 
-            /* Each data point (label + value) */
-            .table-wrapper table td {
-                display: flex;
-                justify-content: space-between;
-                align-items: baseline;
-                text-align: left; /* Value text aligns to the left (start in RTL) */
-                padding: 0.6rem 0;
-                border-bottom: 1px dashed var(--border-color);
-                white-space: normal;
+            /* --- Grid setup for the "Price Edits" table --- */
+            #dataTable tbody tr {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "name     name"
+                    "code     code"
+                    "data-sep data-sep"
+                    "cost     cairo"
+                    "sahel    supplier"
+                    "status   status"
+                    "action-sep action-sep"
+                    "delete   delete";
             }
             
-            /* The label for each data point */
-            .table-wrapper table td::before {
-                content: attr(data-label);
-                font-weight: 500;
-                color: var(--text-secondary);
-                font-size: 0.9em;
-                text-align: right;
-            }
-            
-            /* Remove separator from the data point right before the delete button */
-            .table-wrapper table tr td:nth-last-child(2) {
-                 border-bottom: none;
+            /* --- Grid setup for the "New Items" table --- */
+            #dataTableNewItem tbody tr {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "name     name"
+                    "data-sep data-sep"
+                    "cost     cairo"
+                    "sahel    supplier"
+                    "action-sep action-sep"
+                    "delete   delete";
             }
 
-            /* Style the delete button container */
-            .table-wrapper table td:last-child {
+            /* --- Cell Styling --- */
+            .table-wrapper table td {
+                padding: 0.5rem 0;
                 border: none;
-                padding-top: 0.75rem;
-                margin-top: 0.5rem;
-                justify-content: center;
-                border-top: 1px solid var(--border-color);
+                white-space: normal;
+                display: flex;
+                flex-direction: column; /* Stack label on top of value */
+            }
+
+            /* The generated label */
+            .table-wrapper table td::before {
+                content: attr(data-label);
+                font-size: 0.8em;
+                font-weight: 500;
+                color: var(--text-secondary);
+                margin-bottom: 0.15rem;
+                text-align: right;
+            }
+
+            /* --- Assign Cells to Grid Areas --- */
+            /* Price Edits Table */
+            #dataTable td:nth-child(1) { grid-area: code; }
+            #dataTable td:nth-child(2) { grid-area: name; }
+            #dataTable td:nth-child(3) { grid-area: cost; }
+            #dataTable td:nth-child(4) { grid-area: cairo; }
+            #dataTable td:nth-child(5) { grid-area: sahel; }
+            #dataTable td:nth-child(6) { grid-area: supplier; }
+            #dataTable td:nth-child(7) { grid-area: status; }
+            #dataTable td:nth-child(8) { grid-area: delete; }
+            
+            /* New Items Table */
+            #dataTableNewItem td:nth-child(1) { grid-area: name; }
+            #dataTableNewItem td:nth-child(2) { grid-area: cost; }
+            #dataTableNewItem td:nth-child(3) { grid-area: cairo; }
+            #dataTableNewItem td:nth-child(4) { grid-area: sahel; }
+            #dataTableNewItem td:nth-child(5) { grid-area: supplier; }
+            #dataTableNewItem td:nth-child(6) { grid-area: delete; }
+            
+            /* --- Special Styling for Key Cells --- */
+            /* Name Cell */
+            .table-wrapper td[data-label="الاسم"] {
+                font-size: 1.2em;
+                font-weight: 600;
+                color: var(--primary-color);
+                padding-bottom: 0;
+            }
+            .table-wrapper td[data-label="الاسم"]::before {
+                display: none; /* Hide label "الاسم:" */
             }
             
+            /* Code Cell */
+            .table-wrapper td[data-label="الكود"] {
+                color: var(--text-secondary);
+                font-size: 0.9em;
+                margin-top: -0.25rem;
+                padding-bottom: 0.75rem;
+            }
+             .table-wrapper td[data-label="الكود"]::before {
+                display: none; /* Hide label "الكود:" */
+            }
+            
+            /* Separator between header and data */
+            .table-wrapper td[data-label="الكود"] {
+                grid-area: code / span 2; /* Make it span both columns */
+                border-bottom: 1px solid var(--border-color);
+            }
+            .table-wrapper #dataTableNewItem td[data-label="الاسم"] {
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 0.75rem;
+            }
+             
+            /* Delete Action Cell */
+            .table-wrapper td:last-child {
+                grid-column: 1 / -1; /* Make it span all columns */
+                border-top: 1px solid var(--border-color);
+                padding-top: 0.75rem;
+                margin-top: 0.5rem;
+                align-items: center; /* Center the delete icon */
+            }
+            .table-wrapper td:last-child::before {
+                display: none; /* Hide label "حذف:" */
+            }
             .delete-icon {
-                font-size: 1.2rem;
-                padding: 0.25rem 0.5rem; /* Add padding to make it easier to tap */
+                font-size: 1.3rem;
+                padding: 0.25rem 0.5rem;
             }
         }
     </style>
