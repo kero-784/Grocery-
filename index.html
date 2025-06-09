@@ -101,7 +101,7 @@
         .panel-content { padding: 0 1.5rem 1.5rem 1.5rem; max-height: 40vh; overflow-y: auto; }
         .panel-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
         
-        /* --- NEW: UNIFIED RESPONSIVE TABLE WITH STICKY COLUMNS --- */
+        /* UNIFIED RESPONSIVE TABLE WITH STICKY COLUMNS */
         .table-wrapper {
             overflow-x: auto;
             border: 1px solid var(--border-color);
@@ -118,42 +118,35 @@
             border-bottom: 1px solid var(--border-color);
             text-align: right;
             white-space: nowrap;
+            background-color: var(--card-bg); /* Set base background */
         }
         th {
             background-color: var(--input-bg);
             position: sticky;
             top: 0;
-            z-index: 2; /* Must be above sticky cells */
+            z-index: 2;
         }
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover td { background-color: var(--input-bg); }
         
-        /* Sticky Name Column (1st in New Items, 2nd in Edits) */
-        #dataTable th:nth-child(2), #dataTable td:nth-child(2),
-        #dataTableNewItem th:first-child, #dataTableNewItem td:first-child {
+        /* Sticky Name Column */
+        th.sticky-col-name, td.sticky-col-name {
             position: sticky;
-            left: 0;
+            right: 0; /* Changed to right for RTL */
             z-index: 1;
-            background-color: var(--card-bg);
-            box-shadow: 2px 0 5px -2px var(--sticky-shadow);
-        }
-        #dataTable th:nth-child(2), #dataTableNewItem th:first-child {
-            z-index: 3; /* Header cell must be on top of body cell */
-        }
-
-        /* Sticky Delete Column (Last) */
-        th:last-child, td:last-child {
-            position: sticky;
-            right: 0;
-            z-index: 1;
-            background-color: var(--card-bg);
             box-shadow: -2px 0 5px -2px var(--sticky-shadow);
+        }
+        th.sticky-col-name { z-index: 3; }
+
+        /* Sticky Delete Column */
+        th.sticky-col-action, td.sticky-col-action {
+            position: sticky;
+            left: 0; /* Changed to left for RTL */
+            z-index: 1;
+            box-shadow: 2px 0 5px -2px var(--sticky-shadow);
             text-align: center;
         }
-        th:last-child {
-            z-index: 3;
-        }
+        th.sticky-col-action { z-index: 3; }
         .delete-icon { color: var(--danger-color); cursor: pointer; font-size: 1.2rem; }
         
         /* Generic Form & Button Styles */
@@ -288,9 +281,9 @@
         <div class="panel-header" onclick="togglePanel()"><h3><i class="fa-solid fa-list-check"></i> التغييرات المعلقة (<span id="changesCount">0</span>)</h3><i id="panelToggleIcon" class="fa-solid fa-chevron-up panel-toggle-icon"></i></div>
         <div class="panel-content">
             <div class="panel-actions"><button id="extractButton" class="btn btn-secondary"><i class="fas fa-file-excel"></i> Excel</button><button id="saveImageButton" class="btn btn-secondary"><i class="fas fa-file-image"></i> صورة</button><button id="clearTableButton" class="btn btn-danger"><i class="fas fa-trash-alt"></i> مسح الكل</button></div>
-            <div id="editChanges" class="table-wrapper"><h4>تعديلات الأسعار</h4><table id="dataTable"><thead><tr><th>الكود</th><th>الاسم</th><th>التكلفة</th><th>القاهرة</th><th>الساحل</th><th>المورد</th><th>الحالة الجديدة</th><th>حذف</th></tr></thead><tbody id="dataTableBody"></tbody></table></div>
+            <div id="editChanges" class="table-wrapper"><h4>تعديلات الأسعار</h4><table id="dataTable"><thead><tr><th>الكود</th><th class="sticky-col-name">الاسم</th><th>التكلفة</th><th>القاهرة</th><th>الساحل</th><th>المورد</th><th>الحالة الجديدة</th><th class="sticky-col-action">حذف</th></tr></thead><tbody id="dataTableBody"></tbody></table></div>
             <hr style="border:none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
-            <div id="newChanges" class="table-wrapper"><h4>أصناف جديدة</h4><table id="dataTableNewItem"><thead><tr><th>الاسم</th><th>التكلفة</th><th>القاهرة</th><th>الساحل</th><th>المورد</th><th>حذف</th></tr></thead><tbody id="dataTableBodyNewItem"></tbody></table></div>
+            <div id="newChanges" class="table-wrapper"><h4>أصناف جديدة</h4><table id="dataTableNewItem"><thead><tr><th class="sticky-col-name">الاسم</th><th>التكلفة</th><th>القاهرة</th><th>الساحل</th><th>المورد</th><th class="sticky-col-action">حذف</th></tr></thead><tbody id="dataTableBodyNewItem"></tbody></table></div>
         </div>
     </div>
     
@@ -437,13 +430,13 @@
             const newRow = tableBody.insertRow();
             newRow.innerHTML = `
                 <td>${selectedItem.code}</td>
-                <td>${selectedItem.name}</td>
+                <td class="sticky-col-name">${selectedItem.name}</td>
                 <td>${formatDecimal(document.getElementById('costInput').value)}</td>
                 <td>${formatDecimal(document.getElementById('cairoCostInput').value)}</td>
                 <td>${formatDecimal(document.getElementById('sahelCostInput').value)}</td>
                 <td>${document.getElementById('supplierInput').value}</td>
                 <td>${document.getElementById('newStatusInput').value || 'بدون تغيير'}</td>
-                <td><i class="fas fa-trash-alt delete-icon"></i></td>`;
+                <td class="sticky-col-action"><i class="fas fa-trash-alt delete-icon"></i></td>`;
             newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
             closeModal(document.getElementById('editItemModal'));
             updateChangesCount();
@@ -456,12 +449,12 @@
             const tableBody = document.getElementById('dataTableBodyNewItem');
             const newRow = tableBody.insertRow();
             newRow.innerHTML = `
-                <td>${name}</td>
+                <td class="sticky-col-name">${name}</td>
                 <td>${formatDecimal(document.getElementById('newItemCost').value)}</td>
                 <td>${formatDecimal(document.getElementById('newItemCairoCost').value)}</td>
                 <td>${formatDecimal(document.getElementById('newItemSahelCost').value)}</td>
                 <td>${document.getElementById('newItemSupplier').value}</td>
-                <td><i class="fas fa-trash-alt delete-icon"></i></td>`;
+                <td class="sticky-col-action"><i class="fas fa-trash-alt delete-icon"></i></td>`;
             newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
             closeModal(document.getElementById('addNewItemModal'));
             resetAddModal();
@@ -494,12 +487,46 @@
             else alert("لا توجد تغييرات للتصدير.");
         });
         
+        // ** NEW AND CORRECTED IMAGE SAVE FUNCTION **
         document.getElementById('saveImageButton').addEventListener('click', () => {
-            html2canvas(document.querySelector('.panel-content'), { scale: 2, useCORS: true, backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f0f9ff' }).then(canvas => {
+            const originalPanel = document.querySelector('.panel-content');
+            
+            // 1. Create a clone to prepare for capture
+            const clone = originalPanel.cloneNode(true);
+            clone.style.position = 'absolute';
+            clone.style.top = '0';
+            clone.style.left = '-9999px'; // Position off-screen
+            clone.style.zIndex = '-1';
+            clone.style.width = '1200px'; // Give it a fixed, wide width
+            clone.style.maxHeight = 'none'; // Ensure full height is rendered
+            clone.style.overflow = 'visible';
+            
+            // Ensure table wrappers in the clone are not scrollable
+            clone.querySelectorAll('.table-wrapper').forEach(wrapper => {
+                wrapper.style.overflowX = 'visible';
+            });
+            
+            document.body.appendChild(clone);
+            
+            // 2. Capture the prepared clone
+            const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+            html2canvas(clone, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: isDarkMode ? '#0f172a' : '#f0f9ff',
+                // allowTaint: true // Use if images are from a different origin and CORS fails
+            }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'pending_changes.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
+                
+                // 3. Clean up by removing the clone
+                document.body.removeChild(clone);
+            }).catch(err => {
+                console.error('Image capture failed:', err);
+                // Ensure clone is removed even on failure
+                document.body.removeChild(clone);
             });
         });
     </script>
