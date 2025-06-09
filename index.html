@@ -487,36 +487,59 @@
             else alert("لا توجد تغييرات للتصدير.");
         });
         
-        // ** THE DEFINITIVE, CORRECTED IMAGE SAVE FUNCTION **
+        // ** FINAL, CORRECTED IMAGE SAVE FUNCTION **
         document.getElementById('saveImageButton').addEventListener('click', () => {
-            const originalPanel = document.querySelector('.panel-content');
-
-            // 1. Create a clone to prepare for capture
-            const clone = originalPanel.cloneNode(true);
-
-            // 2. Create a styled container that will force the correct, full-width layout
+            // 1. Create a styled container that will force the correct, full-width layout
             const captureContainer = document.createElement('div');
             captureContainer.style.position = 'absolute';
             captureContainer.style.left = '-9999px'; // Position it completely off-screen
             captureContainer.style.top = '0';
             captureContainer.style.width = '1200px'; // Give it a fixed, wide width to ensure the table renders fully
             captureContainer.style.direction = 'rtl'; // Ensure correct RTL layout for the capture
-            captureContainer.style.padding = '1.5rem'; // Re-apply padding from the original container
+            captureContainer.style.padding = '1.5rem'; // Re-apply padding
+            captureContainer.style.background = 'var(--card-bg)'; // Match background
             
-            // Add the cloned panel content into our prepared container
-            captureContainer.appendChild(clone);
+            let contentAdded = false;
+
+            // 2. Selectively clone ONLY the tables with data into the container
+            const editTableRows = document.getElementById('dataTableBody').rows.length;
+            const newItemTableRows = document.getElementById('dataTableBodyNewItem').rows.length;
+
+            if (editTableRows > 0) {
+                const editChangesWrapper = document.getElementById('editChanges');
+                captureContainer.appendChild(editChangesWrapper.cloneNode(true));
+                contentAdded = true;
+            }
+
+            if (editTableRows > 0 && newItemTableRows > 0) {
+                const separator = document.createElement('hr');
+                separator.style.border = 'none';
+                separator.style.borderTop = '1px solid var(--border-color)';
+                separator.style.margin = '1.5rem 0';
+                captureContainer.appendChild(separator);
+            }
+
+            if (newItemTableRows > 0) {
+                const newChangesWrapper = document.getElementById('newChanges');
+                captureContainer.appendChild(newChangesWrapper.cloneNode(true));
+                contentAdded = true;
+            }
+
+            if (!contentAdded) {
+                alert('لا توجد بيانات لحفظها كصورة.');
+                return;
+            }
             
             // 3. Add the container to the document so it can be rendered by the browser (invisibly)
             document.body.appendChild(captureContainer);
             
             // 4. Capture the prepared container
             const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
-            html2canvas(captureContainer, { // Note: we are capturing the container, not the original element
+            html2canvas(captureContainer, {
                 scale: 2,
                 useCORS: true,
                 backgroundColor: isDarkMode ? '#0f172a' : '#f0f9ff'
             }).then(canvas => {
-                // Create the download link
                 const link = document.createElement('a');
                 link.download = 'pending_changes.png';
                 link.href = canvas.toDataURL('image/png');
