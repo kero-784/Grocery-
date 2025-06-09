@@ -246,8 +246,8 @@
                     <div class="form-group"><label for="supplierInput">المورد</label><input type="text" id="supplierInput" placeholder="اسم المورد"></div>
                     <div class="form-group"><label for="cairoMarginInput">نسبة القاهرة (%)</label><input type="number" id="cairoMarginInput" step="0.001" placeholder="أدخل النسبة"></div>
                     <div class="form-group"><label for="coastMarginInput">نسبة الساحل (%)</label><input type="number" id="coastMarginInput" step="0.001" placeholder="أدخل النسبة"></div>
-                    <div class="form-group"><label for="cairoCostInput">سعر القاهرة</label><input type="number" id="cairoCostInput" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
-                    <div class="form-group"><label for="sahelCostInput">سعر الساحل</label><input type="number" id="sahelCostInput" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
+                    <div class="form-group"><label for="cairoCostInput">سعر القاهرة</label><input type="number" id="cairoCostInput" step="0.001" placeholder="أدخل السعر يدوياً"></div>
+                    <div class="form-group"><label for="sahelCostInput">سعر الساحل</label><input type="number" id="sahelCostInput" step="0.001" placeholder="أدخل السعر يدوياً"></div>
                     <div class="form-group"><label for="newStatusInput">الحالة الجديدة</label><select id="newStatusInput"><option value="" selected>بدون تغيير</option><option value="جاري">جاري</option><option value="موقوف">موقوف</option></select></div>
                     <div class="form-group"><label for="expiryInput">صلاحية (يوم)</label><input type="number" id="expiryInput" placeholder="e.g., 30"></div>
                 </div>
@@ -267,8 +267,8 @@
                     <div class="form-group"><label for="newItemSupplier">المورد</label><input type="text" id="newItemSupplier" placeholder="اسم المورد"></div>
                     <div class="form-group"><label for="newItemCairoMargin">نسبة القاهرة (%)</label><input type="number" id="newItemCairoMargin" step="0.001" placeholder="أدخل النسبة"></div>
                     <div class="form-group"><label for="newItemCoastMargin">نسبة الساحل (%)</label><input type="number" id="newItemCoastMargin" step="0.001" placeholder="أدخل النسبة"></div>
-                    <div class="form-group"><label for="newItemCairoCost">سعر القاهرة</label><input type="number" id="newItemCairoCost" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
-                    <div class="form-group"><label for="newItemSahelCost">سعر الساحل</label><input type="number" id="newItemSahelCost" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
+                    <div class="form-group"><label for="newItemCairoCost">سعر القاهرة</label><input type="number" id="newItemCairoCost" step="0.001" placeholder="أدخل السعر يدوياً"></div>
+                    <div class="form-group"><label for="newItemSahelCost">سعر الساحل</label><input type="number" id="newItemSahelCost" step="0.001" placeholder="أدخل السعر يدوياً"></div>
                     <div class="form-group full-width"><label for="newItemExpiry">صلاحية (يوم)</label><input type="number" id="newItemExpiry" placeholder="e.g., 90"></div>
                 </div>
             </div>
@@ -396,6 +396,7 @@
             document.getElementById('cairoMarginInput').value = item.cairoMargin > 0 ? item.cairoMargin.toFixed(3) : '';
             document.getElementById('coastMarginInput').value = item.coastMargin > 0 ? item.coastMargin.toFixed(3) : '';
             resetEditModalInputs();
+            updateCalculatedPrices(false); // Calculate initial suggested prices
             openModal(document.getElementById('editItemModal'));
         }
         document.getElementById('showAddItemModalBtn').addEventListener('click', () => openModal(document.getElementById('addNewItemModal')));
@@ -410,11 +411,12 @@
             const cairoCostOutput = document.getElementById(isNewItem ? 'newItemCairoCost' : 'cairoCostInput');
             const sahelCostOutput = document.getElementById(isNewItem ? 'newItemSahelCost' : 'sahelCostInput');
 
-            if (!costInput.value.trim()) {
+            const cost = parseFloat(costInput.value);
+            if (isNaN(cost) || cost <= 0) {
                 cairoCostOutput.value = ''; sahelCostOutput.value = '';
                 return;
             }
-            const cost = parseFloat(costInput.value);
+
             const cairoPrice = calculatePrice(cost, parseFloat(cairoMarginInput.value));
             const sahelPrice = calculatePrice(cost, parseFloat(coastMarginInput.value));
             cairoCostOutput.value = cairoPrice > 0 ? cairoPrice.toFixed(3) : '';
@@ -487,21 +489,19 @@
             else alert("لا توجد تغييرات للتصدير.");
         });
         
-        // ** FINAL, CORRECTED IMAGE SAVE FUNCTION **
         document.getElementById('saveImageButton').addEventListener('click', () => {
-            // 1. Create a styled container that will force the correct, full-width layout
             const captureContainer = document.createElement('div');
             captureContainer.style.position = 'absolute';
-            captureContainer.style.left = '-9999px'; // Position it completely off-screen
+            captureContainer.style.left = '-9999px';
             captureContainer.style.top = '0';
-            captureContainer.style.width = '1200px'; // Give it a fixed, wide width to ensure the table renders fully
-            captureContainer.style.direction = 'rtl'; // Ensure correct RTL layout for the capture
-            captureContainer.style.padding = '1.5rem'; // Re-apply padding
-            captureContainer.style.background = 'var(--card-bg)'; // Match background
+            captureContainer.style.width = '1200px';
+            captureContainer.style.direction = 'rtl';
+            captureContainer.style.padding = '1.5rem';
+            captureContainer.style.background = document.documentElement.getAttribute('data-theme') === 'dark' ? 
+                'linear-gradient(135deg, #1e293b, #0f172a)' : 
+                'linear-gradient(135deg, #f0f9ff, #e0f2fe)';
             
             let contentAdded = false;
-
-            // 2. Selectively clone ONLY the tables with data into the container
             const editTableRows = document.getElementById('dataTableBody').rows.length;
             const newItemTableRows = document.getElementById('dataTableBodyNewItem').rows.length;
 
@@ -530,10 +530,8 @@
                 return;
             }
             
-            // 3. Add the container to the document so it can be rendered by the browser (invisibly)
             document.body.appendChild(captureContainer);
             
-            // 4. Capture the prepared container
             const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
             html2canvas(captureContainer, {
                 scale: 2,
@@ -548,7 +546,6 @@
                 console.error('Image capture failed:', err);
                 alert('حدث خطأ أثناء حفظ الصورة.');
             }).finally(() => {
-                // 5. IMPORTANT: Clean up and remove the temporary container from the document
                 document.body.removeChild(captureContainer);
             });
         });
