@@ -198,7 +198,6 @@
         .panel-toggle-icon { transition: transform var(--transition-speed); }
         .pending-changes-panel.open .panel-toggle-icon { transform: rotate(180deg); }
         .panel-content { padding: 0 2rem 1.5rem 2rem; max-height: 40vh; overflow-y: auto; }
-        .panel-content h4 { font-size: 1.1em; margin-bottom: 0.5rem; }
         .panel-actions { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
         
         /* Table */
@@ -206,11 +205,11 @@
         table {
             border-collapse: collapse;
             width: 100%;
-            font-size: 1em; /* UPDATED: Increased on-screen font size */
+            font-size: 0.95em; /* UPDATED: Increased font size for better readability */
         }
         th, td {
             border-bottom: 1px solid var(--border-color);
-            padding: 1rem; /* UPDATED: Increased padding for more space */
+            padding: 0.85rem 1rem;
             text-align: right;
             white-space: nowrap;
         }
@@ -258,7 +257,7 @@
             .item-list li span:nth-child(3) { grid-area: name; font-size: 1.1em; font-weight: 500; margin-bottom: 0.5rem; }
             .item-list li span:nth-child(4) { grid-area: status; font-size: 0.8em; justify-self: start; background: var(--input-bg); padding: 0.2rem 0.5rem; border-radius: 6px; margin-top: 0.5rem; }
             .item-list-wrapper { max-height: 60vh; }
-            .list-header-row { display: none; }
+            .list-header-row { display: none; } /* Hide header on mobile */
         }
         
         /* Responsive Tables in Panel for Mobile */
@@ -297,17 +296,6 @@
                 margin-top: 0.5rem;
             }
         }
-        
-        /* NEW: Special style for image export */
-        .for-export {
-            transform: scale(1.5);
-            transform-origin: top right;
-            width: 66.67% !important; /* Counteract scale to prevent overflow */
-        }
-        .for-export h4 {
-            font-size: 1.5em;
-        }
-
     </style>
 </head>
 <body>
@@ -529,6 +517,7 @@
             document.getElementById('codeDisplay').textContent = item.code;
             document.getElementById('statusDisplay').textContent = item.status;
             
+            // Set margin fields, ensuring they are empty if the value is 0
             document.getElementById('cairoMarginInput').value = item.cairoMargin > 0 ? item.cairoMargin.toFixed(3) : '';
             document.getElementById('coastMarginInput').value = item.coastMargin > 0 ? item.coastMargin.toFixed(3) : '';
             
@@ -634,34 +623,14 @@
             if (wb.SheetNames.length > 0) XLSX.writeFile(wb, "grocery_changes.xlsx");
             else alert("لا توجد تغييرات للتصدير.");
         });
-
-        // UPDATED: Image save button with temporary style change for larger text
         document.getElementById('saveImageButton').addEventListener('click', () => {
-            const panelContent = document.querySelector('.panel-content');
-            
-            // 1. Add the special export class
-            panelContent.classList.add('for-export');
-            
-            // 2. Capture the element with the new class
-            html2canvas(panelContent, { 
-                scale: 2, // Use a high scale for better resolution
-                useCORS: true, 
-                backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f0f9ff' 
-            }).then(canvas => {
+            html2canvas(document.querySelector('.panel-content'), { scale: 2, useCORS: true, backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f0f9ff' }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'pending_changes.jpg';
                 link.href = canvas.toDataURL('image/jpeg', 0.95);
                 link.click();
-                
-                // 3. IMPORTANT: Remove the class after the capture is done
-                panelContent.classList.remove('for-export');
-            }).catch(err => {
-                console.error("Image capture error:", err);
-                // Also remove class in case of an error
-                panelContent.classList.remove('for-export');
             });
         });
-
     </script>
 </body>
 </html>
