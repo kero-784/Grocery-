@@ -14,21 +14,20 @@
         /* CSS Variables for Theming */
         :root {
             --font-family: 'Poppins', sans-serif;
-            --primary-color: #4f46e5; /* Indigo 600 */
-            --primary-hover: #4338ca; /* Indigo 700 */
-            --secondary-color: #64748b; /* Slate 500 */
-            --success-color: #16a34a; /* Green 600 */
-            --danger-color: #dc2626; /* Red 600 */
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --danger-color: #dc2626;
             
             /* Light Theme */
-            --bg-gradient-start: #f0f9ff; /* Sky 50 */
-            --bg-gradient-end: #e0f2fe; /* Sky 100 */
+            --bg-gradient-start: #f0f9ff;
+            --bg-gradient-end: #e0f2fe;
             --card-bg: rgba(255, 255, 255, 0.9);
-            --text-primary: #1e293b; /* Slate 800 */
-            --text-secondary: #475569; /* Slate 600 */
-            --border-color: #e2e8f0; /* Slate 200 */
-            --input-bg: #f8fafc; /* Slate 50 */
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --border-color: #e2e8f0;
+            --input-bg: #f8fafc;
             --shadow-color: rgba(71, 85, 105, 0.1);
+            --sticky-shadow: rgba(0, 0, 0, 0.1);
             --backdrop-color: rgba(248, 250, 252, 0.5);
 
             --border-radius-lg: 16px;
@@ -37,119 +36,134 @@
         }
 
         [data-theme="dark"] {
-            --primary-color: #818cf8; /* Indigo 400 */
-            --primary-hover: #6366f1; /* Indigo 500 */
-            --secondary-color: #94a3b8; /* Slate 400 */
-            
-            --bg-gradient-start: #1e293b; /* Slate 800 */
-            --bg-gradient-end: #0f172a; /* Slate 900 */
+            --primary-color: #818cf8;
+            --primary-hover: #6366f1;
+            --bg-gradient-start: #1e293b;
+            --bg-gradient-end: #0f172a;
             --card-bg: rgba(30, 41, 59, 0.9);
-            --text-primary: #f1f5f9; /* Slate 100 */
-            --text-secondary: #94a3b8; /* Slate 400 */
-            --border-color: #334155; /* Slate 700 */
-            --input-bg: #334155; /* Slate 700 */
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #334155;
             --shadow-color: rgba(0, 0, 0, 0.2);
+            --sticky-shadow: rgba(0, 0, 0, 0.5);
             --backdrop-color: rgba(15, 23, 42, 0.5);
         }
         
-        /* General Styles */
+        /* General & Layout */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-
-        body {
-            font-family: var(--font-family);
-            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding-bottom: 200px;
-        }
-        
-        .app-header { padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .app-header h1 { font-size: 1.75rem; font-weight: 600; }
+        body { font-family: var(--font-family); background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end)); color: var(--text-primary); min-height: 100vh; padding-bottom: 200px; }
+        .app-header { padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .app-header h1 { font-size: 1.5rem; font-weight: 600; }
         .header-actions { display: flex; align-items: center; gap: 1rem; }
         
-        .homepage-container { display: flex; justify-content: center; align-items: center; gap: 2rem; padding: 4rem 2rem; flex-wrap: wrap; }
-        .homepage-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); padding: 2.5rem; text-align: center; cursor: pointer; box-shadow: 0 4px 15px var(--shadow-color); backdrop-filter: blur(10px); transition: transform var(--transition-speed), box-shadow var(--transition-speed); flex-basis: 320px; }
+        /* Homepage */
+        .homepage-container { display: flex; justify-content: center; align-items: center; gap: 1.5rem; padding: 2rem 1rem; flex-wrap: wrap; }
+        .homepage-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); padding: 2rem; text-align: center; cursor: pointer; box-shadow: 0 4px 15px var(--shadow-color); backdrop-filter: blur(10px); transition: transform var(--transition-speed), box-shadow var(--transition-speed); flex-basis: 300px; }
         .homepage-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px var(--shadow-color); }
-        .homepage-card i { font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem; }
-        .homepage-card span { font-size: 1.25rem; font-weight: 500; display: block; }
+        .homepage-card i { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+        .homepage-card span { font-size: 1.1rem; font-weight: 500; display: block; }
 
-        .workspace-container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        /* Main Workspace */
+        .workspace-container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
         .list-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); padding: 1.5rem; box-shadow: 0 4px 15px var(--shadow-color); backdrop-filter: blur(10px); }
-        .list-header-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .list-header-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
         #searchInput { width: 100%; max-width: 400px; }
         
-        /* Item List */
-        .item-list-wrapper { max-height: 50vh; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); }
+        /* Item Search List */
+        .item-list-wrapper { max-height: 60vh; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); }
         .item-list { list-style-type: none; }
-        .item-list li { display: grid; grid-template-columns: 1fr 1fr 2fr 1fr; gap: 1rem; padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); transition: background-color var(--transition-speed); cursor: pointer; }
+        .item-list li { display: grid; grid-template-columns: 1fr 1fr 3fr 1fr; gap: 1rem; padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); transition: background-color var(--transition-speed); cursor: pointer; }
         .item-list li:last-child { border-bottom: none; }
         .item-list li.list-header-row { font-weight: 600; background-color: var(--input-bg); position: sticky; top: 0; z-index: 10; cursor: default; }
         .item-list li:not(.list-header-row):hover { background-color: rgba(79, 70, 229, 0.05); }
         [data-theme="dark"] .item-list li:not(.list-header-row):hover { background-color: rgba(129, 140, 248, 0.1); }
         
-        /* Modal Dialog Logic */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--backdrop-color); backdrop-filter: blur(5px);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 1000; opacity: 0; visibility: hidden;
-            transition: opacity var(--transition-speed), visibility var(--transition-speed);
-            padding: 1rem;
-        }
+        /* Modal Dialog (for data entry) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--backdrop-color); backdrop-filter: blur(5px); display: flex; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity var(--transition-speed), visibility var(--transition-speed); padding: 1rem; align-items: flex-start; overflow-y: auto; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
-            box-shadow: 0 10px 30px var(--shadow-color);
-            width: 100%; max-width: 600px;
-            transform: scale(0.95);
-            transition: transform var(--transition-speed);
-            display: flex; flex-direction: column;
-            max-height: 90vh;
-        }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); box-shadow: 0 10px 30px var(--shadow-color); width: 100%; max-width: 600px; transform: scale(0.95); transition: transform var(--transition-speed); display: flex; flex-direction: column; max-height: 90vh; margin-top: 5vh; }
         .modal-overlay.active .modal-content { transform: scale(1); }
-        .modal-header { flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color); }
+        .modal-header { flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
         .modal-header h2 { font-size: 1.25rem; font-weight: 600; }
         .modal-close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); transition: color var(--transition-speed); }
         .modal-close-btn:hover { color: var(--text-primary); }
         .modal-body { flex-grow: 1; overflow-y: auto; padding: 1.5rem; }
-        .modal-footer { flex-shrink: 0; display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid var(--border-color); }
-
-        /* Forms */
+        .modal-footer { flex-shrink: 0; display: flex; justify-content: flex-end; gap: 1rem; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
         .form-group.full-width { grid-column: span 2; }
-        .form-group label { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); }
-        input, select { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); background-color: var(--input-bg); color: var(--text-primary); font-size: 1rem; font-family: var(--font-family); transition: border-color var(--transition-speed), box-shadow var(--transition-speed); }
-        input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
-        .uneditable-display { background-color: var(--input-bg); padding: 0.75rem; border-radius: var(--border-radius-md); border: 1px solid var(--border-color); }
-        
-        /* Buttons */
-        .btn { padding: 0.75rem 1.5rem; border-radius: var(--border-radius-md); cursor: pointer; font-size: 1rem; font-weight: 500; font-family: var(--font-family); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; border: 1px solid transparent; transition: all var(--transition-speed); }
-        .btn:hover { transform: translateY(-2px); } .btn:active { transform: translateY(0); }
-        .btn-primary { background-color: var(--primary-color); color: #fff; } .btn-primary:hover { background-color: var(--primary-hover); }
-        .btn-secondary { background-color: transparent; color: var(--text-primary); border-color: var(--border-color); } .btn-secondary:hover { background-color: var(--input-bg); }
-        .btn-danger { background-color: var(--danger-color); color: #fff; }
 
         /* Pending Changes Panel */
-        .pending-changes-panel { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 500; background: var(--card-bg); border-top: 1px solid var(--border-color); box-shadow: 0 -5px 20px var(--shadow-color); border-top-left-radius: var(--border-radius-lg); border-top-right-radius: var(--border-radius-lg); backdrop-filter: blur(10px); transition: transform var(--transition-speed); transform: translateY(calc(100% - 60px)); }
+        .pending-changes-panel { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 500; background: var(--card-bg); border-top: 1px solid var(--border-color); box-shadow: 0 -5px 20px var(--shadow-color); border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; backdrop-filter: blur(10px); transition: transform var(--transition-speed); transform: translateY(calc(100% - 60px)); }
         .pending-changes-panel.open { transform: translateY(0); }
-        .panel-header { padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .panel-header h3 { font-size: 1.1rem; font-weight: 600; }
-        .panel-toggle-icon { transition: transform var(--transition-speed); }
-        .pending-changes-panel.open .panel-toggle-icon { transform: rotate(180deg); }
-        .panel-content { padding: 0 2rem 1.5rem 2rem; max-height: 40vh; overflow-y: auto; }
-        .panel-actions { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .panel-header { padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .panel-content { padding: 0 1.5rem 1.5rem 1.5rem; max-height: 40vh; overflow-y: auto; }
+        .panel-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
         
-        /* Table in Pending Panel */
-        .table-wrapper { overflow-x: auto; }
-        table { border-collapse: collapse; width: 100%; font-size: 0.95em; }
-        th, td { border-bottom: 1px solid var(--border-color); padding: 0.85rem 1rem; text-align: right; white-space: nowrap; }
-        th { font-weight: 600; }
-        tbody tr:last-child td { border-bottom: none; }
-        .delete-icon { color: var(--danger-color); cursor: pointer; font-size: 1.1rem; transition: opacity var(--transition-speed); }
-        .delete-icon:hover { opacity: 0.7; }
+        /* --- NEW: UNIFIED RESPONSIVE TABLE WITH STICKY COLUMNS --- */
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 800px; /* Force horizontal scroll on smaller screens */
+            font-size: 0.9em;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: right;
+            white-space: nowrap;
+        }
+        th {
+            background-color: var(--input-bg);
+            position: sticky;
+            top: 0;
+            z-index: 2; /* Must be above sticky cells */
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Sticky Name Column (1st in New Items, 2nd in Edits) */
+        #dataTable th:nth-child(2), #dataTable td:nth-child(2),
+        #dataTableNewItem th:first-child, #dataTableNewItem td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            background-color: var(--card-bg);
+            box-shadow: 2px 0 5px -2px var(--sticky-shadow);
+        }
+        #dataTable th:nth-child(2), #dataTableNewItem th:first-child {
+            z-index: 3; /* Header cell must be on top of body cell */
+        }
+
+        /* Sticky Delete Column (Last) */
+        th:last-child, td:last-child {
+            position: sticky;
+            right: 0;
+            z-index: 1;
+            background-color: var(--card-bg);
+            box-shadow: -2px 0 5px -2px var(--sticky-shadow);
+            text-align: center;
+        }
+        th:last-child {
+            z-index: 3;
+        }
+        .delete-icon { color: var(--danger-color); cursor: pointer; font-size: 1.2rem; }
+        
+        /* Generic Form & Button Styles */
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        input, select { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); background-color: var(--input-bg); color: var(--text-primary); font-size: 1rem; font-family: var(--font-family); }
+        .btn { padding: 0.75rem 1.5rem; border-radius: var(--border-radius-md); cursor: pointer; font-size: 1rem; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; border: 1px solid transparent; transition: all var(--transition-speed); }
+        .btn-primary { background-color: var(--primary-color); color: #fff; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: transparent; color: var(--text-primary); border-color: var(--border-color); }
+        .btn-danger { background-color: var(--danger-color); color: #fff; }
         
         /* Theme Toggle */
         .theme-switch-wrapper { display: flex; align-items: center; gap: 8px; }
@@ -160,84 +174,15 @@
         input:checked + .slider { background-color: var(--primary-color); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* --- MOBILE RESPONSIVE STYLES --- */
-        @media (max-width: 768px) {
-            .app-header { flex-direction: column; gap: 1rem; padding: 1rem; }
-            .workspace-container, .homepage-container { padding: 1rem; }
-            .list-header-controls { flex-direction: column; align-items: stretch; }
-            #searchInput { max-width: 100%; }
+        @media (max-width: 640px) {
             .form-grid { grid-template-columns: 1fr; }
             .form-group.full-width { grid-column: span 1; }
-            .panel-header, .panel-content { padding-left: 1rem; padding-right: 1rem; }
-            
-            .modal-overlay {
-                align-items: flex-start;
-                padding-top: 5vh;
-                overflow-y: auto;
-            }
-            .modal-content { width: 95%; margin: 0 auto; }
-            .modal-header, .modal-body, .modal-footer { padding: 1rem; }
-        }
-
-        /* Responsive Item List for Mobile */
-        @media (max-width: 640px) {
-            .item-list li:not(.list-header-row) { grid-template-areas: "name name" "code plu" "status status"; grid-template-columns: 1fr 1fr; padding: 1rem; gap: 0.25rem 1rem; }
-            .item-list li span:nth-child(1) { grid-area: code; font-size: 0.8em; color: var(--text-secondary); }
-            .item-list li span:nth-child(2) { grid-area: plu; font-size: 0.8em; color: var(--text-secondary); }
-            .item-list li span:nth-child(3) { grid-area: name; font-size: 1.1em; font-weight: 500; margin-bottom: 0.5rem; }
-            .item-list li span:nth-child(4) { grid-area: status; font-size: 0.8em; justify-self: start; background: var(--input-bg); padding: 0.2rem 0.5rem; border-radius: 6px; margin-top: 0.5rem; }
-            .item-list-wrapper { max-height: 60vh; }
+            .item-list li { grid-template-columns: 2fr 1fr; grid-template-areas: "name status" "code plu"; }
+            .item-list li span:nth-child(1) { grid-area: code; }
+            .item-list li span:nth-child(2) { grid-area: plu; }
+            .item-list li span:nth-child(3) { grid-area: name; font-size: 1.1em; font-weight: 500; }
+            .item-list li span:nth-child(4) { grid-area: status; justify-self: end; }
             .list-header-row { display: none; }
-        }
-        
-        /* Responsive Tables in Pending Panel for Mobile */
-        @media (max-width: 640px) {
-            .table-wrapper:not(.force-desktop-view) table thead { display: none; }
-            .table-wrapper:not(.force-desktop-view) table, 
-            .table-wrapper:not(.force-desktop-view) table tbody, 
-            .table-wrapper:not(.force-desktop-view) table tr, 
-            .table-wrapper:not(.force-desktop-view) table td { display: block; width: 100%; }
-            .table-wrapper:not(.force-desktop-view) table tr { display: grid; gap: 0 1rem; margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); padding: 1rem; background-color: var(--input-bg); box-shadow: 0 2px 8px var(--shadow-color); }
-            #dataTable:not(.force-desktop-view) tbody tr { grid-template-columns: 1fr 1fr; grid-template-areas: "name name" "code code" "cost cairo" "sahel supplier" "status status" "delete delete"; }
-            #dataTableNewItem:not(.force-desktop-view) tbody tr { grid-template-columns: 1fr 1fr; grid-template-areas: "name name" "cost cairo" "sahel supplier" "delete delete"; }
-            .table-wrapper:not(.force-desktop-view) table td { padding: 0.5rem 0; border: none; white-space: normal; display: flex; flex-direction: column; }
-            .table-wrapper:not(.force-desktop-view) table td::before { content: attr(data-label); font-size: 0.8em; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.15rem; text-align: right; }
-            .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(1) { grid-area: code; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(2) { grid-area: name; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(3) { grid-area: cost; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(4) { grid-area: cairo; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(5) { grid-area: sahel; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(6) { grid-area: supplier; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(7) { grid-area: status; } .table-wrapper:not(.force-desktop-view) #dataTable td:nth-child(8) { grid-area: delete; }
-            .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(1) { grid-area: name; } .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(2) { grid-area: cost; } .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(3) { grid-area: cairo; } .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(4) { grid-area: sahel; } .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(5) { grid-area: supplier; } .table-wrapper:not(.force-desktop-view) #dataTableNewItem td:nth-child(6) { grid-area: delete; }
-            .table-wrapper:not(.force-desktop-view) td[data-label="الاسم"] { font-size: 1.2em; font-weight: 600; color: var(--primary-color); padding-bottom: 0; }
-            .table-wrapper:not(.force-desktop-view) td[data-label="الاسم"]::before { display: none; }
-            .table-wrapper:not(.force-desktop-view) td[data-label="الكود"] { color: var(--text-secondary); font-size: 0.9em; margin-top: -0.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); }
-            .table-wrapper:not(.force-desktop-view) td[data-label="الكود"]::before { display: none; }
-            .table-wrapper:not(.force-desktop-view) #dataTableNewItem td[data-label="الاسم"] { border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
-            .table-wrapper:not(.force-desktop-view) td:last-child { grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 0.75rem; margin-top: 0.5rem; align-items: center; }
-            .table-wrapper:not(.force-desktop-view) td:last-child::before { display: none; }
-            .table-wrapper:not(.force-desktop-view) .delete-icon { font-size: 1.3rem; padding: 0.25rem 0.5rem; }
-        }
-
-        /* NEW: Class to force desktop table view for image export */
-        .table-wrapper.force-desktop-view {
-            overflow: visible !important;
-        }
-        .table-wrapper.force-desktop-view table,
-        .table-wrapper.force-desktop-view table tbody,
-        .table-wrapper.force-desktop-view table tr,
-        .table-wrapper.force-desktop-view table td,
-        .table-wrapper.force-desktop-view table th {
-            display: revert !important; /* Reverts to browser default (table, tr, td etc) */
-            width: revert !important;
-            grid-area: auto !important;
-            padding: 0.85rem 1rem !important;
-            border: revert !important;
-            border-bottom: 1px solid var(--border-color) !important;
-            background: none !important;
-            box-shadow: none !important;
-            white-space: nowrap !important;
-        }
-        .table-wrapper.force-desktop-view table thead {
-            display: table-header-group !important;
-        }
-        .table-wrapper.force-desktop-view table td::before {
-            display: none !important;
         }
     </style>
 </head>
@@ -298,9 +243,9 @@
             <div class="modal-header"><h2>تعديل بيانات الصنف</h2><button class="modal-close-btn">×</button></div>
             <div class="modal-body">
                 <div class="form-grid">
-                    <div class="form-group full-width"><label>الاسم</label><div id="nameDisplay" class="uneditable-display"></div></div>
-                    <div class="form-group"><label>الكود</label><div id="codeDisplay" class="uneditable-display"></div></div>
-                    <div class="form-group"><label>الحالة الحالية</label><div id="statusDisplay" class="uneditable-display"></div></div>
+                    <div class="form-group full-width"><label>الاسم</label><div class="uneditable-display" id="nameDisplay"></div></div>
+                    <div class="form-group"><label>الكود</label><div class="uneditable-display" id="codeDisplay"></div></div>
+                    <div class="form-group"><label>الحالة الحالية</label><div class="uneditable-display" id="statusDisplay"></div></div>
                 </div>
                 <hr style="border:none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
                 <div class="form-grid">
@@ -308,8 +253,8 @@
                     <div class="form-group"><label for="supplierInput">المورد</label><input type="text" id="supplierInput" placeholder="اسم المورد"></div>
                     <div class="form-group"><label for="cairoMarginInput">نسبة القاهرة (%)</label><input type="number" id="cairoMarginInput" step="0.001" placeholder="أدخل النسبة"></div>
                     <div class="form-group"><label for="coastMarginInput">نسبة الساحل (%)</label><input type="number" id="coastMarginInput" step="0.001" placeholder="أدخل النسبة"></div>
-                    <div class="form-group"><label for="cairoCostInput">سعر القاهرة</label><input type="number" id="cairoCostInput" step="0.001" placeholder="يُحسب تلقائياً"></div>
-                    <div class="form-group"><label for="sahelCostInput">سعر الساحل</label><input type="number" id="sahelCostInput" step="0.001" placeholder="يُحسب تلقائياً"></div>
+                    <div class="form-group"><label for="cairoCostInput">سعر القاهرة</label><input type="number" id="cairoCostInput" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
+                    <div class="form-group"><label for="sahelCostInput">سعر الساحل</label><input type="number" id="sahelCostInput" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
                     <div class="form-group"><label for="newStatusInput">الحالة الجديدة</label><select id="newStatusInput"><option value="" selected>بدون تغيير</option><option value="جاري">جاري</option><option value="موقوف">موقوف</option></select></div>
                     <div class="form-group"><label for="expiryInput">صلاحية (يوم)</label><input type="number" id="expiryInput" placeholder="e.g., 30"></div>
                 </div>
@@ -329,8 +274,8 @@
                     <div class="form-group"><label for="newItemSupplier">المورد</label><input type="text" id="newItemSupplier" placeholder="اسم المورد"></div>
                     <div class="form-group"><label for="newItemCairoMargin">نسبة القاهرة (%)</label><input type="number" id="newItemCairoMargin" step="0.001" placeholder="أدخل النسبة"></div>
                     <div class="form-group"><label for="newItemCoastMargin">نسبة الساحل (%)</label><input type="number" id="newItemCoastMargin" step="0.001" placeholder="أدخل النسبة"></div>
-                    <div class="form-group"><label for="newItemCairoCost">سعر القاهرة</label><input type="number" id="newItemCairoCost" step="0.001" placeholder="يُحسب تلقائياً"></div>
-                    <div class="form-group"><label for="newItemSahelCost">سعر الساحل</label><input type="number" id="newItemSahelCost" step="0.001" placeholder="يُحسب تلقائياً"></div>
+                    <div class="form-group"><label for="newItemCairoCost">سعر القاهرة</label><input type="number" id="newItemCairoCost" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
+                    <div class="form-group"><label for="newItemSahelCost">سعر الساحل</label><input type="number" id="newItemSahelCost" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
                     <div class="form-group full-width"><label for="newItemExpiry">صلاحية (يوم)</label><input type="number" id="newItemExpiry" placeholder="e.g., 90"></div>
                 </div>
             </div>
@@ -398,12 +343,8 @@
                 const rows = csvText.trim().split('\n');
                 const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
                 const indices = {
-                    code: headers.indexOf('code'),
-                    plu: headers.indexOf('plu'),
-                    name: headers.indexOf('name'),
-                    status: headers.indexOf('status'),
-                    cairoMargin: headers.indexOf('cairo margin'),
-                    coastMargin: headers.indexOf('coast margin')
+                    code: headers.indexOf('code'), plu: headers.indexOf('plu'), name: headers.indexOf('name'),
+                    status: headers.indexOf('status'), cairoMargin: headers.indexOf('cairo margin'), coastMargin: headers.indexOf('coast margin')
                 };
                 database = rows.slice(1).map(row => {
                     const values = row.split(',');
@@ -459,92 +400,68 @@
             document.getElementById('nameDisplay').textContent = item.name;
             document.getElementById('codeDisplay').textContent = item.code;
             document.getElementById('statusDisplay').textContent = item.status;
-            
             document.getElementById('cairoMarginInput').value = item.cairoMargin > 0 ? item.cairoMargin.toFixed(3) : '';
             document.getElementById('coastMarginInput').value = item.coastMargin > 0 ? item.coastMargin.toFixed(3) : '';
-            
             resetEditModalInputs();
             openModal(document.getElementById('editItemModal'));
         }
         document.getElementById('showAddItemModalBtn').addEventListener('click', () => openModal(document.getElementById('addNewItemModal')));
         
-        // UPDATED: Handle blank/invalid inputs by returning an empty string
-        const formatDecimal = numStr => {
-            if (!numStr || isNaN(parseFloat(numStr))) {
-                return '';
-            }
-            return parseFloat(numStr).toFixed(3);
-        };
+        const formatDecimal = numStr => (!numStr || isNaN(parseFloat(numStr))) ? '' : parseFloat(numStr).toFixed(3);
         const calculatePrice = (cost, margin) => (cost > 0 && margin >= 0 && margin < 100) ? cost / (1 - (margin / 100)) : 0;
         
-        // UPDATED: Handle blank cost input
-        function updateCalculatedPrices() {
-            const costValue = document.getElementById('costInput').value;
-            if (!costValue.trim()) {
-                document.getElementById('cairoCostInput').value = '';
-                document.getElementById('sahelCostInput').value = '';
+        function updateCalculatedPrices(isNewItem) {
+            const costInput = document.getElementById(isNewItem ? 'newItemCost' : 'costInput');
+            const cairoMarginInput = document.getElementById(isNewItem ? 'newItemCairoMargin' : 'cairoMarginInput');
+            const coastMarginInput = document.getElementById(isNewItem ? 'newItemCoastMargin' : 'coastMarginInput');
+            const cairoCostOutput = document.getElementById(isNewItem ? 'newItemCairoCost' : 'cairoCostInput');
+            const sahelCostOutput = document.getElementById(isNewItem ? 'newItemSahelCost' : 'sahelCostInput');
+
+            if (!costInput.value.trim()) {
+                cairoCostOutput.value = ''; sahelCostOutput.value = '';
                 return;
             }
-            const cost = parseFloat(costValue);
-            const cairoPrice = calculatePrice(cost, parseFloat(document.getElementById('cairoMarginInput').value));
-            const sahelPrice = calculatePrice(cost, parseFloat(document.getElementById('coastMarginInput').value));
-            document.getElementById('cairoCostInput').value = cairoPrice > 0 ? cairoPrice.toFixed(3) : '';
-            document.getElementById('sahelCostInput').value = sahelPrice > 0 ? sahelPrice.toFixed(3) : '';
+            const cost = parseFloat(costInput.value);
+            const cairoPrice = calculatePrice(cost, parseFloat(cairoMarginInput.value));
+            const sahelPrice = calculatePrice(cost, parseFloat(coastMarginInput.value));
+            cairoCostOutput.value = cairoPrice > 0 ? cairoPrice.toFixed(3) : '';
+            sahelCostOutput.value = sahelPrice > 0 ? sahelPrice.toFixed(3) : '';
         }
-        // UPDATED: Handle blank cost input
-        function updateCalculatedNewItemPrices() {
-            const costValue = document.getElementById('newItemCost').value;
-             if (!costValue.trim()) {
-                document.getElementById('newItemCairoCost').value = '';
-                document.getElementById('newItemSahelCost').value = '';
-                return;
-            }
-            const cost = parseFloat(costValue);
-            const cairoPrice = calculatePrice(cost, parseFloat(document.getElementById('newItemCairoMargin').value));
-            const sahelPrice = calculatePrice(cost, parseFloat(document.getElementById('newItemCoastMargin').value));
-            document.getElementById('newItemCairoCost').value = cairoPrice > 0 ? cairoPrice.toFixed(3) : '';
-            document.getElementById('newItemSahelCost').value = sahelPrice > 0 ? sahelPrice.toFixed(3) : '';
-        }
-        ['costInput', 'cairoMarginInput', 'coastMarginInput'].forEach(id => document.getElementById(id).addEventListener('input', updateCalculatedPrices));
-        ['newItemCost', 'newItemCairoMargin', 'newItemCoastMargin'].forEach(id => document.getElementById(id).addEventListener('input', updateCalculatedNewItemPrices));
+
+        ['costInput', 'cairoMarginInput', 'coastMarginInput'].forEach(id => document.getElementById(id).addEventListener('input', () => updateCalculatedPrices(false)));
+        ['newItemCost', 'newItemCairoMargin', 'newItemCoastMargin'].forEach(id => document.getElementById(id).addEventListener('input', () => updateCalculatedPrices(true)));
         
-        // UPDATED: Removed strict cost validation
         document.getElementById('addButton').addEventListener('click', () => {
-            if (!selectedItem) {
-                alert('الرجاء اختيار صنف أولاً.'); return;
-            }
+            if (!selectedItem) { alert('الرجاء اختيار صنف أولاً.'); return; }
             const tableBody = document.getElementById('dataTableBody');
             const newRow = tableBody.insertRow();
             newRow.innerHTML = `
-                <td data-label="الكود">${selectedItem.code}</td>
-                <td data-label="الاسم">${selectedItem.name}</td>
-                <td data-label="التكلفة">${formatDecimal(document.getElementById('costInput').value)}</td>
-                <td data-label="القاهرة">${formatDecimal(document.getElementById('cairoCostInput').value)}</td>
-                <td data-label="الساحل">${formatDecimal(document.getElementById('sahelCostInput').value)}</td>
-                <td data-label="المورد">${document.getElementById('supplierInput').value}</td>
-                <td data-label="الحالة الجديدة">${document.getElementById('newStatusInput').value || 'بدون تغيير'}</td>
-                <td data-label="حذف"><i class="fas fa-trash-alt delete-icon"></i></td>`;
+                <td>${selectedItem.code}</td>
+                <td>${selectedItem.name}</td>
+                <td>${formatDecimal(document.getElementById('costInput').value)}</td>
+                <td>${formatDecimal(document.getElementById('cairoCostInput').value)}</td>
+                <td>${formatDecimal(document.getElementById('sahelCostInput').value)}</td>
+                <td>${document.getElementById('supplierInput').value}</td>
+                <td>${document.getElementById('newStatusInput').value || 'بدون تغيير'}</td>
+                <td><i class="fas fa-trash-alt delete-icon"></i></td>`;
             newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
             closeModal(document.getElementById('editItemModal'));
             updateChangesCount();
             if (!document.getElementById('pendingChangesPanel').classList.contains('open')) togglePanel();
         });
         
-        // UPDATED: Relaxed validation to only require a name
         document.getElementById('addNewItemButton').addEventListener('click', () => {
             const name = document.getElementById('newItemName').value;
-            if (!name.trim()) {
-                 alert('الرجاء إدخال اسم الصنف.'); return;
-            }
+            if (!name.trim()) { alert('الرجاء إدخال اسم الصنف.'); return; }
             const tableBody = document.getElementById('dataTableBodyNewItem');
             const newRow = tableBody.insertRow();
             newRow.innerHTML = `
-                <td data-label="الاسم">${name}</td>
-                <td data-label="التكلفة">${formatDecimal(document.getElementById('newItemCost').value)}</td>
-                <td data-label="القاهرة">${formatDecimal(document.getElementById('newItemCairoCost').value)}</td>
-                <td data-label="الساحل">${formatDecimal(document.getElementById('newItemSahelCost').value)}</td>
-                <td data-label="المورد">${document.getElementById('newItemSupplier').value}</td>
-                <td data-label="حذف"><i class="fas fa-trash-alt delete-icon"></i></td>`;
+                <td>${name}</td>
+                <td>${formatDecimal(document.getElementById('newItemCost').value)}</td>
+                <td>${formatDecimal(document.getElementById('newItemCairoCost').value)}</td>
+                <td>${formatDecimal(document.getElementById('newItemSahelCost').value)}</td>
+                <td>${document.getElementById('newItemSupplier').value}</td>
+                <td><i class="fas fa-trash-alt delete-icon"></i></td>`;
             newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
             closeModal(document.getElementById('addNewItemModal'));
             resetAddModal();
@@ -552,23 +469,11 @@
             if (!document.getElementById('pendingChangesPanel').classList.contains('open')) togglePanel();
         });
 
-        function resetEditModalInputs() {
-            document.getElementById('costInput').value = '';
-            document.getElementById('supplierInput').value = '';
-            document.getElementById('cairoCostInput').value = '';
-            document.getElementById('sahelCostInput').value = '';
-            document.getElementById('newStatusInput').value = '';
-            document.getElementById('expiryInput').value = '';
-        }
-        function resetAddModal() {
-            document.getElementById('addNewItemModal').querySelectorAll('input').forEach(el => el.value = '');
-        }
-
+        function resetEditModalInputs() { ['costInput', 'supplierInput', 'cairoCostInput', 'sahelCostInput', 'newStatusInput', 'expiryInput'].forEach(id => document.getElementById(id).value = ''); }
+        function resetAddModal() { document.getElementById('addNewItemModal').querySelectorAll('input').forEach(el => el.value = ''); }
         function togglePanel() { document.getElementById('pendingChangesPanel').classList.toggle('open'); }
-        function updateChangesCount() {
-            const count = document.getElementById('dataTableBody').rows.length + document.getElementById('dataTableBodyNewItem').rows.length;
-            document.getElementById('changesCount').textContent = count;
-        }
+        function updateChangesCount() { document.getElementById('changesCount').textContent = document.getElementById('dataTableBody').rows.length + document.getElementById('dataTableBodyNewItem').rows.length; }
+        
         document.getElementById('clearTableButton').addEventListener('click', () => {
             document.getElementById('dataTableBody').innerHTML = '';
             document.getElementById('dataTableBodyNewItem').innerHTML = '';
@@ -589,18 +494,8 @@
             else alert("لا توجد تغييرات للتصدير.");
         });
         
-        // UPDATED: Force desktop view for consistent image export
         document.getElementById('saveImageButton').addEventListener('click', () => {
-            const panelContent = document.querySelector('.panel-content');
-            const tableWrappers = panelContent.querySelectorAll('.table-wrapper');
-
-            // Add class to force desktop view
-            tableWrappers.forEach(tw => tw.classList.add('force-desktop-view'));
-            
-            html2canvas(panelContent, { scale: 2, useCORS: true, backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f0f9ff' }).then(canvas => {
-                // IMPORTANT: Remove the class after the canvas is created
-                tableWrappers.forEach(tw => tw.classList.remove('force-desktop-view'));
-
+            html2canvas(document.querySelector('.panel-content'), { scale: 2, useCORS: true, backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f0f9ff' }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'pending_changes.png';
                 link.href = canvas.toDataURL('image/png');
