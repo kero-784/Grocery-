@@ -61,7 +61,8 @@
             background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
             color: var(--text-primary);
             min-height: 100vh;
-            padding-bottom: 200px;
+            /* FIXED: Reduced excessive padding, as sticky positioning handles overlap better */
+            padding-bottom: 80px;
         }
         
         .app-header {
@@ -179,6 +180,12 @@
             transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
         }
         input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
+        /* FIXED: Style for readonly inputs to look disabled but still be readable */
+        input:read-only {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
         .uneditable-display { background-color: var(--input-bg); padding: 0.75rem; border-radius: var(--border-radius-md); border: 1px solid var(--border-color); }
         
         /* Buttons */
@@ -191,7 +198,13 @@
         .btn-danger { background-color: var(--danger-color); color: #fff; }
 
         /* Pending Changes Panel */
-        .pending-changes-panel { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 500; background: var(--card-bg); border-top: 1px solid var(--border-color); box-shadow: 0 -5px 20px var(--shadow-color); border-top-left-radius: var(--border-radius-lg); border-top-right-radius: var(--border-radius-lg); backdrop-filter: blur(10px); transition: transform var(--transition-speed); transform: translateY(calc(100% - 60px)); }
+        /* FIXED: Changed position to sticky for better mobile/keyboard behavior */
+        .pending-changes-panel {
+            position: sticky;
+            bottom: 0;
+            left: 0; width: 100%; z-index: 500; background: var(--card-bg); border-top: 1px solid var(--border-color); box-shadow: 0 -5px 20px var(--shadow-color); border-top-left-radius: var(--border-radius-lg); border-top-right-radius: var(--border-radius-lg); backdrop-filter: blur(10px); transition: transform var(--transition-speed);
+            transform: translateY(calc(100% - 60px));
+        }
         .pending-changes-panel.open { transform: translateY(0); }
         .panel-header { padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .panel-header h3 { font-size: 1.1rem; font-weight: 600; }
@@ -205,7 +218,7 @@
         table {
             border-collapse: collapse;
             width: 100%;
-            font-size: 0.95em; /* UPDATED: Increased font size for better readability */
+            font-size: 0.95em;
         }
         th, td {
             border-bottom: 1px solid var(--border-color);
@@ -276,10 +289,12 @@
                 padding: 1rem;
             }
             .table-wrapper table td {
+                /* FIXED: Changed alignment for better readability on mobile */
                 display: flex;
-                justify-content: space-between;
+                justify-content: flex-start; /* Aligns items to the right in RTL */
                 align-items: center;
-                text-align: left;
+                gap: 0.75rem; /* Adds space between label and value */
+                text-align: right; /* Ensures text inside aligns right */
                 padding: 0.5rem 0;
                 border: none;
                 white-space: normal;
@@ -287,9 +302,8 @@
             .table-wrapper table td::before {
                 content: attr(data-label);
                 font-weight: 500;
-                text-align: right;
-                margin-left: 0.5rem;
                 color: var(--text-secondary);
+                flex-shrink: 0; /* Prevents the label from shrinking */
             }
             .table-wrapper table td:last-child {
                 justify-content: center;
@@ -365,8 +379,9 @@
                     <div class="form-group"><label for="supplierInput">المورد</label><input type="text" id="supplierInput" placeholder="اسم المورد"></div>
                     <div class="form-group"><label for="cairoMarginInput">نسبة القاهرة (%)</label><input type="number" id="cairoMarginInput" step="0.001" placeholder="أدخل النسبة"></div>
                     <div class="form-group"><label for="coastMarginInput">نسبة الساحل (%)</label><input type="number" id="coastMarginInput" step="0.001" placeholder="أدخل النسبة"></div>
-                    <div class="form-group"><label for="cairoCostInput">سعر القاهرة</label><input type="number" id="cairoCostInput" step="0.001" placeholder="يُحسب تلقائياً"></div>
-                    <div class="form-group"><label for="sahelCostInput">سعر الساحل</label><input type="number" id="sahelCostInput" step="0.001" placeholder="يُحسب تلقائياً"></div>
+                    <!-- FIXED: Added readonly to prevent user input -->
+                    <div class="form-group"><label for="cairoCostInput">سعر القاهرة</label><input type="number" id="cairoCostInput" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
+                    <div class="form-group"><label for="sahelCostInput">سعر الساحل</label><input type="number" id="sahelCostInput" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
                     <div class="form-group"><label for="newStatusInput">الحالة الجديدة</label><select id="newStatusInput"><option value="" selected>بدون تغيير</option><option value="جاري">جاري</option><option value="موقوف">موقوف</option></select></div>
                     <div class="form-group"><label for="expiryInput">صلاحية (يوم)</label><input type="number" id="expiryInput" placeholder="e.g., 30"></div>
                 </div>
@@ -386,8 +401,9 @@
                     <div class="form-group"><label for="newItemSupplier">المورد</label><input type="text" id="newItemSupplier" placeholder="اسم المورد"></div>
                     <div class="form-group"><label for="newItemCairoMargin">نسبة القاهرة (%)</label><input type="number" id="newItemCairoMargin" step="0.001" placeholder="أدخل النسبة"></div>
                     <div class="form-group"><label for="newItemCoastMargin">نسبة الساحل (%)</label><input type="number" id="newItemCoastMargin" step="0.001" placeholder="أدخل النسبة"></div>
-                    <div class="form-group"><label for="newItemCairoCost">سعر القاهرة</label><input type="number" id="newItemCairoCost" step="0.001" placeholder="يُحسب تلقائياً"></div>
-                    <div class="form-group"><label for="newItemSahelCost">سعر الساحل</label><input type="number" id="newItemSahelCost" step="0.001" placeholder="يُحسب تلقائياً"></div>
+                    <!-- FIXED: Added readonly to prevent user input -->
+                    <div class="form-group"><label for="newItemCairoCost">سعر القاهرة</label><input type="number" id="newItemCairoCost" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
+                    <div class="form-group"><label for="newItemSahelCost">سعر الساحل</label><input type="number" id="newItemSahelCost" step="0.001" placeholder="يُحسب تلقائياً" readonly></div>
                     <div class="form-group full-width"><label for="newItemExpiry">صلاحية (يوم)</label><input type="number" id="newItemExpiry" placeholder="e.g., 90"></div>
                 </div>
             </div>
@@ -517,11 +533,16 @@
             document.getElementById('codeDisplay').textContent = item.code;
             document.getElementById('statusDisplay').textContent = item.status;
             
-            // Set margin fields, ensuring they are empty if the value is 0
+            // First, clear any old data from a previous selection
+            resetEditModalInputs();
+
+            // Then, populate with the new item's data
             document.getElementById('cairoMarginInput').value = item.cairoMargin > 0 ? item.cairoMargin.toFixed(3) : '';
             document.getElementById('coastMarginInput').value = item.coastMargin > 0 ? item.coastMargin.toFixed(3) : '';
             
-            resetEditModalInputs();
+            // FIXED: Removed the call to resetEditModalInputs() from here. 
+            // It now runs first to clear old data before new data is set.
+            
             openModal(document.getElementById('editItemModal'));
         }
         document.getElementById('showAddItemModalBtn').addEventListener('click', () => openModal(document.getElementById('addNewItemModal')));
@@ -588,15 +609,18 @@
         });
 
         function resetEditModalInputs() {
+            // This function now correctly resets all editable fields in the edit modal.
             document.getElementById('costInput').value = '';
             document.getElementById('supplierInput').value = '';
+            document.getElementById('cairoMarginInput').value = '';
+            document.getElementById('coastMarginInput').value = '';
             document.getElementById('cairoCostInput').value = '';
             document.getElementById('sahelCostInput').value = '';
             document.getElementById('newStatusInput').value = '';
             document.getElementById('expiryInput').value = '';
         }
         function resetAddModal() {
-            document.getElementById('addNewItemModal').querySelectorAll('input').forEach(el => el.value = '');
+            document.getElementById('addNewItemModal').querySelectorAll('input, select').forEach(el => el.value = '');
         }
 
         function togglePanel() { document.getElementById('pendingChangesPanel').classList.toggle('open'); }
@@ -605,9 +629,11 @@
             document.getElementById('changesCount').textContent = count;
         }
         document.getElementById('clearTableButton').addEventListener('click', () => {
-            document.getElementById('dataTableBody').innerHTML = '';
-            document.getElementById('dataTableBodyNewItem').innerHTML = '';
-            updateChangesCount();
+            if (confirm('هل أنت متأكد من أنك تريد مسح جميع التغييرات المعلقة؟')) {
+                document.getElementById('dataTableBody').innerHTML = '';
+                document.getElementById('dataTableBodyNewItem').innerHTML = '';
+                updateChangesCount();
+            }
         });
         
         document.getElementById('extractButton').addEventListener('click', () => {
@@ -624,11 +650,24 @@
             else alert("لا توجد تغييرات للتصدير.");
         });
         document.getElementById('saveImageButton').addEventListener('click', () => {
-            html2canvas(document.querySelector('.panel-content'), { scale: 2, useCORS: true, backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f0f9ff' }).then(canvas => {
+            const panelContent = document.querySelector('.panel-content');
+            const isPanelOpen = document.getElementById('pendingChangesPanel').classList.contains('open');
+
+            // Temporarily ensure the panel is fully visible for the screenshot
+            if (!isPanelOpen) {
+                panelContent.style.maxHeight = 'none';
+            }
+
+            html2canvas(panelContent, { scale: 2, useCORS: true, backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f0f9ff' }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'pending_changes.jpg';
                 link.href = canvas.toDataURL('image/jpeg', 0.95);
                 link.click();
+
+                // Restore original style
+                if(!isPanelOpen) {
+                    panelContent.style.maxHeight = '';
+                }
             });
         });
     </script>
