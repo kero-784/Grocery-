@@ -118,7 +118,7 @@
             border-bottom: 1px solid var(--border-color);
             text-align: right;
             white-space: nowrap;
-            background-color: var(--card-bg); /* Set base background */
+            background-color: var(--card-bg); /* Set base background for sticky cells */
         }
         th {
             background-color: var(--input-bg);
@@ -129,19 +129,19 @@
         tbody tr:last-child td { border-bottom: none; }
         tbody tr:hover td { background-color: var(--input-bg); }
         
-        /* Sticky Name Column */
+        /* Sticky Name Column (Right side for RTL) */
         th.sticky-col-name, td.sticky-col-name {
             position: sticky;
-            right: 0; /* Changed to right for RTL */
+            right: 0; 
             z-index: 1;
             box-shadow: -2px 0 5px -2px var(--sticky-shadow);
         }
         th.sticky-col-name { z-index: 3; }
 
-        /* Sticky Delete Column */
+        /* Sticky Delete Column (Left side for RTL) */
         th.sticky-col-action, td.sticky-col-action {
             position: sticky;
-            left: 0; /* Changed to left for RTL */
+            left: 0;
             z-index: 1;
             box-shadow: 2px 0 5px -2px var(--sticky-shadow);
             text-align: center;
@@ -463,7 +463,7 @@
         });
 
         function resetEditModalInputs() { ['costInput', 'supplierInput', 'cairoCostInput', 'sahelCostInput', 'newStatusInput', 'expiryInput'].forEach(id => document.getElementById(id).value = ''); }
-        function resetAddModal() { document.getElementById('addNewItemModal').querySelectorAll('input').forEach(el => el.value = ''); }
+        function resetAddModal() { document.getElementById('addNewItemModal').querySelectorAll('input, select').forEach(el => el.value = ''); }
         function togglePanel() { document.getElementById('pendingChangesPanel').classList.toggle('open'); }
         function updateChangesCount() { document.getElementById('changesCount').textContent = document.getElementById('dataTableBody').rows.length + document.getElementById('dataTableBodyNewItem').rows.length; }
         
@@ -487,46 +487,46 @@
             else alert("لا توجد تغييرات للتصدير.");
         });
         
-        // ** NEW AND CORRECTED IMAGE SAVE FUNCTION **
+        // ** THE DEFINITIVE, CORRECTED IMAGE SAVE FUNCTION **
         document.getElementById('saveImageButton').addEventListener('click', () => {
             const originalPanel = document.querySelector('.panel-content');
-            
+
             // 1. Create a clone to prepare for capture
             const clone = originalPanel.cloneNode(true);
-            clone.style.position = 'absolute';
-            clone.style.top = '0';
-            clone.style.left = '-9999px'; // Position off-screen
-            clone.style.zIndex = '-1';
-            clone.style.width = '1200px'; // Give it a fixed, wide width
-            clone.style.maxHeight = 'none'; // Ensure full height is rendered
-            clone.style.overflow = 'visible';
+
+            // 2. Create a styled container that will force the correct, full-width layout
+            const captureContainer = document.createElement('div');
+            captureContainer.style.position = 'absolute';
+            captureContainer.style.left = '-9999px'; // Position it completely off-screen
+            captureContainer.style.top = '0';
+            captureContainer.style.width = '1200px'; // Give it a fixed, wide width to ensure the table renders fully
+            captureContainer.style.direction = 'rtl'; // Ensure correct RTL layout for the capture
+            captureContainer.style.padding = '1.5rem'; // Re-apply padding from the original container
             
-            // Ensure table wrappers in the clone are not scrollable
-            clone.querySelectorAll('.table-wrapper').forEach(wrapper => {
-                wrapper.style.overflowX = 'visible';
-            });
+            // Add the cloned panel content into our prepared container
+            captureContainer.appendChild(clone);
             
-            document.body.appendChild(clone);
+            // 3. Add the container to the document so it can be rendered by the browser (invisibly)
+            document.body.appendChild(captureContainer);
             
-            // 2. Capture the prepared clone
+            // 4. Capture the prepared container
             const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
-            html2canvas(clone, {
+            html2canvas(captureContainer, { // Note: we are capturing the container, not the original element
                 scale: 2,
                 useCORS: true,
-                backgroundColor: isDarkMode ? '#0f172a' : '#f0f9ff',
-                // allowTaint: true // Use if images are from a different origin and CORS fails
+                backgroundColor: isDarkMode ? '#0f172a' : '#f0f9ff'
             }).then(canvas => {
+                // Create the download link
                 const link = document.createElement('a');
                 link.download = 'pending_changes.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                
-                // 3. Clean up by removing the clone
-                document.body.removeChild(clone);
             }).catch(err => {
                 console.error('Image capture failed:', err);
-                // Ensure clone is removed even on failure
-                document.body.removeChild(clone);
+                alert('حدث خطأ أثناء حفظ الصورة.');
+            }).finally(() => {
+                // 5. IMPORTANT: Clean up and remove the temporary container from the document
+                document.body.removeChild(captureContainer);
             });
         });
     </script>
