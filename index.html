@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Grocery Data Entry</title>
+    <title> Grocery Data Entry</title>
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -294,6 +294,7 @@
             initTheme();
             initModalClosers();
             fetchDataFromGoogleSheet();
+            setupEventListeners(); // Consolidated event listener setup
         });
 
         let database = [];
@@ -382,12 +383,7 @@
                 itemList.appendChild(li);
             });
         }
-        document.getElementById('searchInput').addEventListener('input', e => {
-            const term = e.target.value.toLowerCase();
-            const filtered = database.filter(item => Object.values(item).some(val => String(val).toLowerCase().includes(term)));
-            renderList(filtered);
-        });
-
+        
         function selectItemForEditing(item) {
             selectedItem = item;
             document.getElementById('nameDisplay').textContent = item.name;
@@ -396,10 +392,9 @@
             document.getElementById('cairoMarginInput').value = item.cairoMargin > 0 ? item.cairoMargin.toFixed(3) : '';
             document.getElementById('coastMarginInput').value = item.coastMargin > 0 ? item.coastMargin.toFixed(3) : '';
             resetEditModalInputs();
-            updateCalculatedPrices(false); // Calculate initial suggested prices
+            // REMOVED: Do not pre-calculate prices when the modal opens.
             openModal(document.getElementById('editItemModal'));
         }
-        document.getElementById('showAddItemModalBtn').addEventListener('click', () => openModal(document.getElementById('addNewItemModal')));
         
         const formatDecimal = numStr => (!numStr || isNaN(parseFloat(numStr))) ? '' : parseFloat(numStr).toFixed(3);
         const calculatePrice = (cost, margin) => (cost > 0 && margin >= 0 && margin < 100) ? cost / (1 - (margin / 100)) : 0;
@@ -426,134 +421,185 @@
             sahelCostOutput.value = sahelPrice > 0 ? sahelPrice.toFixed(3) : '';
         }
 
-        ['costInput', 'cairoMarginInput', 'coastMarginInput'].forEach(id => document.getElementById(id).addEventListener('input', () => updateCalculatedPrices(false)));
-        ['newItemCost', 'newItemCairoMargin', 'newItemCoastMargin'].forEach(id => document.getElementById(id).addEventListener('input', () => updateCalculatedPrices(true)));
-        
-        document.getElementById('addButton').addEventListener('click', () => {
-            if (!selectedItem) { alert('الرجاء اختيار صنف أولاً.'); return; }
-            const tableBody = document.getElementById('dataTableBody');
-            const newRow = tableBody.insertRow();
-            newRow.innerHTML = `
-                <td>${selectedItem.code}</td>
-                <td class="sticky-col-name">${selectedItem.name}</td>
-                <td>${formatDecimal(document.getElementById('costInput').value)}</td>
-                <td>${formatDecimal(document.getElementById('cairoCostInput').value)}</td>
-                <td>${formatDecimal(document.getElementById('sahelCostInput').value)}</td>
-                <td>${document.getElementById('supplierInput').value}</td>
-                <td>${document.getElementById('newStatusInput').value || 'بدون تغيير'}</td>
-                <td>${document.getElementById('expiryInput').value || ''}</td>
-                <td class="sticky-col-action"><i class="fas fa-trash-alt delete-icon"></i></td>`;
-            newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
-            closeModal(document.getElementById('editItemModal'));
-            updateChangesCount();
-            if (!document.getElementById('pendingChangesPanel').classList.contains('open')) togglePanel();
-        });
-        
-        document.getElementById('addNewItemButton').addEventListener('click', () => {
-            const name = document.getElementById('newItemName').value;
-            if (!name.trim()) { alert('الرجاء إدخال اسم الصنف.'); return; }
-            const tableBody = document.getElementById('dataTableBodyNewItem');
-            const newRow = tableBody.insertRow();
-            newRow.innerHTML = `
-                <td class="sticky-col-name">${name}</td>
-                <td>${formatDecimal(document.getElementById('newItemCost').value)}</td>
-                <td>${formatDecimal(document.getElementById('newItemCairoCost').value)}</td>
-                <td>${formatDecimal(document.getElementById('newItemSahelCost').value)}</td>
-                <td>${document.getElementById('newItemSupplier').value}</td>
-                <td>${document.getElementById('newItemExpiry').value || ''}</td>
-                <td class="sticky-col-action"><i class="fas fa-trash-alt delete-icon"></i></td>`;
-            newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
-            closeModal(document.getElementById('addNewItemModal'));
-            resetAddModal();
-            updateChangesCount();
-            if (!document.getElementById('pendingChangesPanel').classList.contains('open')) togglePanel();
-        });
+        // --- NEW FUNCTION ---
+        // Handles the cost input for the edit modal, prompting the user for action.
+        function handleCostInput() {
+            const costInput = document.getElementById('costInput');
+            const cost = parseFloat(costInput.value);
 
+            if (isNaN(cost) || cost <= 0) {
+                document.getElementById('cairoCostInput').value = '';
+                document.getElementById('sahelCostInput').value = '';
+                return;
+            }
+            
+            const cairoMarginInput = document.getElementById('cairoMarginInput');
+            const coastMarginInput = document.getElementById('coastMarginInput');
+            const hasCairoMargin = cairoMarginInput.value.trim() !== '' && !isNaN(parseFloat(cairoMarginInput.value));
+            const hasCoastMargin = coastMarginInput.value.trim() !== '' && !isNaN(parseFloat(coastMarginInput.value));
+
+            // Only prompt if there are existing margins to apply.
+            if (hasCairoMargin || hasCoastMargin) {
+                if (confirm("هل تريد حساب سعر البيع من النسبة المسجلة سابقا؟")) {
+                    // User confirmed. Calculate prices based on the new cost and existing margins.
+                    updateCalculatedPrices(false);
+                } else {
+                    // User declined. Clear price fields to allow for manual entry.
+                    document.getElementById('cairoCostInput').value = '';
+                    document.getElementById('sahelCostInput').value = '';
+                }
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', e => {
+                const term = e.target.value.toLowerCase();
+                const filtered = database.filter(item => Object.values(item).some(val => String(val).toLowerCase().includes(term)));
+                renderList(filtered);
+            });
+
+            document.getElementById('showAddItemModalBtn').addEventListener('click', () => openModal(document.getElementById('addNewItemModal')));
+
+            // --- UPDATED EVENT LISTENERS ---
+            // Use 'change' event for cost input to prompt user only after they finish entering the value.
+            document.getElementById('costInput').addEventListener('change', handleCostInput); 
+            
+            // For the edit modal, if margins are changed, update prices instantly if a cost is present.
+            ['cairoMarginInput', 'coastMarginInput'].forEach(id => {
+                document.getElementById(id).addEventListener('input', () => updateCalculatedPrices(false));
+            });
+
+            // Keep original instant calculation behavior for the "Add New Item" modal.
+            ['newItemCost', 'newItemCairoMargin', 'newItemCoastMargin'].forEach(id => {
+                document.getElementById(id).addEventListener('input', () => updateCalculatedPrices(true));
+            });
+
+            document.getElementById('addButton').addEventListener('click', () => {
+                if (!selectedItem) { alert('الرجاء اختيار صنف أولاً.'); return; }
+                const tableBody = document.getElementById('dataTableBody');
+                const newRow = tableBody.insertRow();
+                newRow.innerHTML = `
+                    <td>${selectedItem.code}</td>
+                    <td class="sticky-col-name">${selectedItem.name}</td>
+                    <td>${formatDecimal(document.getElementById('costInput').value)}</td>
+                    <td>${formatDecimal(document.getElementById('cairoCostInput').value)}</td>
+                    <td>${formatDecimal(document.getElementById('sahelCostInput').value)}</td>
+                    <td>${document.getElementById('supplierInput').value}</td>
+                    <td>${document.getElementById('newStatusInput').value || 'بدون تغيير'}</td>
+                    <td>${document.getElementById('expiryInput').value || ''}</td>
+                    <td class="sticky-col-action"><i class="fas fa-trash-alt delete-icon"></i></td>`;
+                newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
+                closeModal(document.getElementById('editItemModal'));
+                updateChangesCount();
+                if (!document.getElementById('pendingChangesPanel').classList.contains('open')) togglePanel();
+            });
+            
+            document.getElementById('addNewItemButton').addEventListener('click', () => {
+                const name = document.getElementById('newItemName').value;
+                if (!name.trim()) { alert('الرجاء إدخال اسم الصنف.'); return; }
+                const tableBody = document.getElementById('dataTableBodyNewItem');
+                const newRow = tableBody.insertRow();
+                newRow.innerHTML = `
+                    <td class="sticky-col-name">${name}</td>
+                    <td>${formatDecimal(document.getElementById('newItemCost').value)}</td>
+                    <td>${formatDecimal(document.getElementById('newItemCairoCost').value)}</td>
+                    <td>${formatDecimal(document.getElementById('newItemSahelCost').value)}</td>
+                    <td>${document.getElementById('newItemSupplier').value}</td>
+                    <td>${document.getElementById('newItemExpiry').value || ''}</td>
+                    <td class="sticky-col-action"><i class="fas fa-trash-alt delete-icon"></i></td>`;
+                newRow.querySelector('.delete-icon').onclick = () => { newRow.remove(); updateChangesCount(); };
+                closeModal(document.getElementById('addNewItemModal'));
+                resetAddModal();
+                updateChangesCount();
+                if (!document.getElementById('pendingChangesPanel').classList.contains('open')) togglePanel();
+            });
+
+            document.getElementById('clearTableButton').addEventListener('click', () => {
+                document.getElementById('dataTableBody').innerHTML = '';
+                document.getElementById('dataTableBodyNewItem').innerHTML = '';
+                updateChangesCount();
+            });
+
+            document.getElementById('extractButton').addEventListener('click', () => {
+                const wb = XLSX.utils.book_new();
+                if (document.getElementById('dataTableBody').rows.length > 0) {
+                    const ws1 = XLSX.utils.table_to_sheet(document.getElementById('dataTable'));
+                    XLSX.utils.book_append_sheet(wb, ws1, "تعديلات الأسعار");
+                }
+                if (document.getElementById('dataTableBodyNewItem').rows.length > 0) {
+                    const ws2 = XLSX.utils.table_to_sheet(document.getElementById('dataTableNewItem'));
+                    XLSX.utils.book_append_sheet(wb, ws2, "أصناف جديدة");
+                }
+                if (wb.SheetNames.length > 0) XLSX.writeFile(wb, "grocery_changes.xlsx");
+                else alert("لا توجد تغييرات للتصدير.");
+            });
+            
+            document.getElementById('saveImageButton').addEventListener('click', () => {
+                const captureContainer = document.createElement('div');
+                captureContainer.style.position = 'absolute';
+                captureContainer.style.left = '-9999px';
+                captureContainer.style.top = '0';
+                captureContainer.style.width = '1200px';
+                captureContainer.style.direction = 'rtl';
+                captureContainer.style.padding = '1.5rem';
+                captureContainer.style.background = document.documentElement.getAttribute('data-theme') === 'dark' ? 
+                    'linear-gradient(135deg, #1e293b, #0f172a)' : 
+                    'linear-gradient(135deg, #f0f9ff, #e0f2fe)';
+                
+                let contentAdded = false;
+                const editTableRows = document.getElementById('dataTableBody').rows.length;
+                const newItemTableRows = document.getElementById('dataTableBodyNewItem').rows.length;
+
+                if (editTableRows > 0) {
+                    const editChangesWrapper = document.getElementById('editChanges');
+                    captureContainer.appendChild(editChangesWrapper.cloneNode(true));
+                    contentAdded = true;
+                }
+
+                if (editTableRows > 0 && newItemTableRows > 0) {
+                    const separator = document.createElement('hr');
+                    separator.style.border = 'none';
+                    separator.style.borderTop = '1px solid var(--border-color)';
+                    separator.style.margin = '1.5rem 0';
+                    captureContainer.appendChild(separator);
+                }
+
+                if (newItemTableRows > 0) {
+                    const newChangesWrapper = document.getElementById('newChanges');
+                    captureContainer.appendChild(newChangesWrapper.cloneNode(true));
+                    contentAdded = true;
+                }
+
+                if (!contentAdded) {
+                    alert('لا توجد بيانات لحفظها كصورة.');
+                    return;
+                }
+                
+                document.body.appendChild(captureContainer);
+                
+                const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+                html2canvas(captureContainer, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: isDarkMode ? '#0f172a' : '#f0f9ff'
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'pending_changes.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }).catch(err => {
+                    console.error('Image capture failed:', err);
+                    alert('حدث خطأ أثناء حفظ الصورة.');
+                }).finally(() => {
+                    document.body.removeChild(captureContainer);
+                });
+            });
+        }
+        
         function resetEditModalInputs() { ['costInput', 'supplierInput', 'cairoCostInput', 'sahelCostInput', 'newStatusInput', 'expiryInput'].forEach(id => document.getElementById(id).value = ''); }
         function resetAddModal() { document.getElementById('addNewItemModal').querySelectorAll('input, select').forEach(el => el.value = ''); }
         function togglePanel() { document.getElementById('pendingChangesPanel').classList.toggle('open'); }
         function updateChangesCount() { document.getElementById('changesCount').textContent = document.getElementById('dataTableBody').rows.length + document.getElementById('dataTableBodyNewItem').rows.length; }
-        
-        document.getElementById('clearTableButton').addEventListener('click', () => {
-            document.getElementById('dataTableBody').innerHTML = '';
-            document.getElementById('dataTableBodyNewItem').innerHTML = '';
-            updateChangesCount();
-        });
-        
-        document.getElementById('extractButton').addEventListener('click', () => {
-            const wb = XLSX.utils.book_new();
-            if (document.getElementById('dataTableBody').rows.length > 0) {
-                const ws1 = XLSX.utils.table_to_sheet(document.getElementById('dataTable'));
-                XLSX.utils.book_append_sheet(wb, ws1, "تعديلات الأسعار");
-            }
-            if (document.getElementById('dataTableBodyNewItem').rows.length > 0) {
-                const ws2 = XLSX.utils.table_to_sheet(document.getElementById('dataTableNewItem'));
-                XLSX.utils.book_append_sheet(wb, ws2, "أصناف جديدة");
-            }
-            if (wb.SheetNames.length > 0) XLSX.writeFile(wb, "grocery_changes.xlsx");
-            else alert("لا توجد تغييرات للتصدير.");
-        });
-        
-        document.getElementById('saveImageButton').addEventListener('click', () => {
-            const captureContainer = document.createElement('div');
-            captureContainer.style.position = 'absolute';
-            captureContainer.style.left = '-9999px';
-            captureContainer.style.top = '0';
-            captureContainer.style.width = '1200px';
-            captureContainer.style.direction = 'rtl';
-            captureContainer.style.padding = '1.5rem';
-            captureContainer.style.background = document.documentElement.getAttribute('data-theme') === 'dark' ? 
-                'linear-gradient(135deg, #1e293b, #0f172a)' : 
-                'linear-gradient(135deg, #f0f9ff, #e0f2fe)';
-            
-            let contentAdded = false;
-            const editTableRows = document.getElementById('dataTableBody').rows.length;
-            const newItemTableRows = document.getElementById('dataTableBodyNewItem').rows.length;
-
-            if (editTableRows > 0) {
-                const editChangesWrapper = document.getElementById('editChanges');
-                captureContainer.appendChild(editChangesWrapper.cloneNode(true));
-                contentAdded = true;
-            }
-
-            if (editTableRows > 0 && newItemTableRows > 0) {
-                const separator = document.createElement('hr');
-                separator.style.border = 'none';
-                separator.style.borderTop = '1px solid var(--border-color)';
-                separator.style.margin = '1.5rem 0';
-                captureContainer.appendChild(separator);
-            }
-
-            if (newItemTableRows > 0) {
-                const newChangesWrapper = document.getElementById('newChanges');
-                captureContainer.appendChild(newChangesWrapper.cloneNode(true));
-                contentAdded = true;
-            }
-
-            if (!contentAdded) {
-                alert('لا توجد بيانات لحفظها كصورة.');
-                return;
-            }
-            
-            document.body.appendChild(captureContainer);
-            
-            const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
-            html2canvas(captureContainer, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: isDarkMode ? '#0f172a' : '#f0f9ff'
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'pending_changes.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            }).catch(err => {
-                console.error('Image capture failed:', err);
-                alert('حدث خطأ أثناء حفظ الصورة.');
-            }).finally(() => {
-                document.body.removeChild(captureContainer);
-            });
-        });
     </script>
 </body>
 </html>
